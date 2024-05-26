@@ -1,0 +1,79 @@
+
+<nav class="main-menu">
+    <ul>
+        <li style="margin-bottom: 30px; margin-top: 25px;">
+            <a>
+                <img src="../../../assets/icons/create.svg" style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 20px;" alt="">
+                <span class="nav-heading">
+                    ProductPath
+                </span>
+            </a>
+          
+        </li>
+        <li [routerLink]="['du/userprofile']">
+            <a>
+                <img src="../../../assets/icons/user1.svg" style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    User Profile
+                </span>
+            </a>
+          
+        </li>
+        <li [routerLink]="['dp/plans']">
+            <a>
+                <img src="../../../assets//icons/pay.svg" style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    Payment
+                </span>
+            </a>
+            
+        </li>
+        <li [routerLink]="['ds/statistics']">
+            <a>
+                <img src="../../../assets/icons/chart-871.svg" style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    Statistics
+                </span>
+            </a>
+            
+        </li>
+        <li [routerLink]="['quizmenu']">
+            <a>
+                <img src="../../../assets/icons/create.svg"  style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    Create forms
+                </span>
+            </a>
+           
+        </li>
+        <!-- <li [routerLink]="['help']">
+            <a>
+                <img src="../../../assets/icons/question-mark1.svg"  style="width: 33px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    how to use
+                </span>
+            </a>
+           
+        </li> -->
+    </ul>
+
+    <ul class="logout">
+        <li [routerLink]="['help']">
+            <a>
+                <img src="../../../assets/icons/question-mark1.svg"  style="width: 33px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    how to use
+                </span>
+            </a>
+           
+        </li>
+        <li>
+           <a [routerLink]="['/logout']">
+            <img src="../../../assets/icons/logoff.svg" style="width: 30px; padding-left: 20px; padding-right: 20px; margin-bottom: 25px;" alt="">
+                <span class="nav-text">
+                    Logout
+                </span>
+            </a>
+        </li>  
+    </ul>
+</nav>

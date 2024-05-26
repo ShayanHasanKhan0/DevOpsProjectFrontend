@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* nunito sans */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600&display=swap');
+
+/* font */
+@font-face {
+  font-family: "typeformsegoe";
+  src: url("../../frontend/src/assets/fonts/sogoe/Segoe_UI.ttf")
+}
+@font-face {
+  font-family: "typeformapercumedium";
+  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuProMedium.otf")
+}
+@font-face {
+  font-family: "typeformsegoebold";
+  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuBold.otf")
+}
+@font-face {
+  font-family: "apercupro";
+  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuLight.otf")
+}
+/*  */
+
+body{
+    margin: 0;
+    padding: 0;
+}
+/* chart */
+
+  :root {
+    ----appDarkBlue: #16093F;
+    --appDarkGrey: #898989;
+    --appPurple: #6127FF;
+    --appLightGrey: #F0F0F0;
+    --appWhite: #ffffff;
+    --appError: #EB2828;
+    --appSuccess: #008926;
+  
+    --appSmallCurvedBorder: 4px;
+    --appTransTime: 0.25s
+    /* --t1: #C397FC;
+    --t2: #77DFC6;
+    --t3: #F3D86E;
+    --t4: #43BFFD;
+    --t5: #FE6590; */
+  }
+  /* hide scrollbar */
+  ::-webkit-scrollbar {
+    display: none;
+  }

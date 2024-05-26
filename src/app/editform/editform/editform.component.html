@@ -1,0 +1,41 @@
+<app-quiztabs></app-quiztabs>
+
+<div class="loading" *ngIf="isloading">
+    <app-loading></app-loading>
+</div>
+
+<div  *ngIf="!isloading">
+    <h1>Buttons</h1>
+    <h4>border radius</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="customizeform.customizeButtons.borderRadius">
+
+    <h4>border color</h4>
+    <input type="color" (change)="onChange()" [(ngModel)]="customizeform.customizeButtons.borderColor">
+
+    <h4>background color</h4>
+    <input type="color" (change)="onChange()" [(ngModel)]="customizeform.customizeButtons.backgroundColor">
+
+    <h4>font color</h4>
+    <input type="color" (change)="onChange()" [(ngModel)]="customizeform.customizeButtons.color">
+</div>
+<!-- 
+<div>
+    <h1>options</h1>
+    <h4>border radius</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="userProfile.homeAddress">
+
+    <h4>background color</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="userProfile.homeAddress">
+
+    <h4>font color</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="userProfile.homeAddress">
+</div>
+
+<div>
+    <h1>pop-up</h1>
+    <h4>background image</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="userProfile.homeAddress">
+
+    <h4>background color</h4>
+    <input type="text" (change)="onChange()" [(ngModel)]="userProfile.homeAddress">
+</div> -->

@@ -1,0 +1,48 @@
+<app-quiztabs></app-quiztabs>
+<app-statstab></app-statstab>
+
+<div class="header" style="background-color: #FAFAFA;">
+    <div class="heading1">
+        <div class="resp">
+            <div class="" style="margin-left: 10px;">responses</div>
+            <button class="sidebuttons" style="margin-right: 50px;"><div class="">Export responses</div><img style="width: 20px; margin-left: 10px; margin-bottom: 3px;" src="../../../assets/icons/export.svg" alt=""></button></div>
+        <div class="chartname"></div>
+    </div>
+    <div class="heading2">
+
+        <div class="loading" *ngIf="!loaded">
+            <app-loading></app-loading>
+        </div>
+
+        <div class="noresponse" *ngIf="loaded && responses==null">
+            <div class="box2">no responses yet...</div>
+            <img src="../../../assets/illustrations/Empty Inbox _Flatline (2).svg" style="width: 100%;" alt="">
+        </div>
+
+        <table class="table" *ngIf="loaded && responses!=null">
+            <tbody class="tr">
+                <tr class="tr tr1" style="height: 42px;">
+                    <td class="td" style="width: 10%;"></td>
+                    <td class="td details1" style="width: 30%; font-size: 17px;">Variables</td>
+                    <td class="td details1" style="width: 30%; font-size: 17px;">Some other details</td>
+                    <td class="td details1" style="width: 30%; font-size: 17px;">View full details</td>
+                </tr>
+
+    
+                <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;" *ngFor="let item of responses | paginate: { itemsPerPage: 10, currentPage: p }; let ndx = index;">
+                    <td class="td details1" style="width: 10%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;color: #737373;">
+                        {{ ((p-1)*10)+(ndx+1) }}.
+                    </td>
+                    <td class="td details" style="width: 30%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">{{item.s | number}}</td>
+                    <td class="td details" style="width: 30%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">10000</td>
+                    <td class="td details" style="width: 30%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">3234</td>
+                </tr>
+    
+            </tbody>
+        </table>
+
+        <div class="paginationcont" *ngIf="loaded && responses!=null">
+            <pagination-controls (pageChange)="p = $event" class="paginationcontrols"></pagination-controls>
+        </div>
+    </div>
+</div>

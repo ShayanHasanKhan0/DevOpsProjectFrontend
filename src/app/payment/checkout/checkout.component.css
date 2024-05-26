@@ -1,0 +1,175 @@
+/* google fonts imports */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap');
+/*  */
+
+.loading {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+.err {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+.package {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #F0F0F0;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding-top: 70px;
+}
+.dropinparent {
+    /* height: 340px; */
+    padding-top: 30px;
+    background-color: #F0F0F0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.subscriptioncontainer {
+    height: 100vh;
+    background-color: #F0F0F0;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 50px;
+}
+.methodscontainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.subbuttons {
+    /* margin-left: 200px; */
+}
+/* NO BORDER SPINNER */
+.spinner {
+
+}
+.subscribebutton:disabled .spinner {
+    display: inline-block;
+    margin-left: 5px !important;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    background: transparent;
+    border-top: 4px solid #009688;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+}
+.subscribebutton {
+    width: 130px;
+    height: 40px;
+    border-radius: 5px;
+    font-size:large;
+    font-family: 'Source Sans Pro', sans-serif;
+    border: 1px solid black;
+}
+
+.removepaymentbutton {
+    width: 200px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 20px;
+    background-color:rgb(223, 95, 95);
+    font-size: 13px;
+    border: 1px solid black;
+}
+.removepaymentbutton:disabled .spinner1 {
+    display: inline-block;
+    margin-left: 5px !important;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    background: transparent;
+    border-top: 4px solid black;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+}
+.approve-btn {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    width: 250px;
+    height: 40px;
+    border-radius: 5px;
+    font-size:large;
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: white;
+
+    border: 1px solid black;
+}
+.approve-btn:disabled .spinner2{
+    display: inline-block;
+    margin-left: 10px !important;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    background: transparent;
+    border-top: 4px solid #282829;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+}
+/* table payment method */
+.styled-table {
+    /* border: 2px solid #282829; */
+    border-collapse: collapse;
+    width: 70%;
+    /* height: 300px; */
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+}
+.styled-table thead tr {
+    background-color: #282829;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th{
+    padding: 12px 15px;
+    border: 2px solid #282829;
+}
+.styled-table td {
+    height: 100px;
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    /* border-bottom: 1px solid #dddddd; */
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    /* background-color: #f3f3f3; */
+}
+
+.styled-table tbody tr:last-of-type {
+    /* border: 2px solid #009879; */
+}
+.styled-table tbody tr.activerow {
+    /* font-weight: bold; */
+    color: #282829;
+    background-color: #e4e2e2;
+    border: 1px solid #282829;
+}
+
+.secure {
+    /* color: ; */
+    width: 160px;
+    height: 25px;
+    font-family: 'Source Sans Pro', sans-serif;
+    border-radius: 3px;
+    border: 1px solid #282829;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

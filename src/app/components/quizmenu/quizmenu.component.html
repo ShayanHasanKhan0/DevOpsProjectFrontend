@@ -1,0 +1,110 @@
+
+<div class="background">
+    <div class="header">
+        <div class="heading1">
+            My workspace
+            <button class="createquizbutton" (click)="addRoot()">
+                <img src="../../../assets/icons/plus1.svg" class="plus" alt="">
+                <span>Create Form</span>
+            </button>
+        </div>
+    </div>
+    <div class="loading" *ngIf="!render">
+        <app-loading></app-loading>
+    </div>
+    <div *ngIf="render" class="card-list-container">
+        <div class="mid">
+            <div class="card-container" *ngFor="let item of list">
+                <div class="card" (click)=" onDblClick(item)">
+                    <div class="cardhead">
+                        <div class="cardheadtxt">
+                            {{item.name}}
+                        </div>
+                    </div>
+                    <div class="cardbottom" (click)="$event.stopPropagation();">
+                        <div class="cardbottomcont">
+                            <div class="cardbottomtxt">responses<span class="responses">: 1234343</span></div>
+
+                            <button class="dotsbutton">
+                                <label class="dropdown">
+
+                                    
+                                    <div class="dots" #toggleButton (click)="subMenu(item)">...</div>
+                                  
+                                    <input type="checkbox" class="dd-input" id="test">
+                                  
+                                    <ul class="dd-menu" #menu [class.activesubmenu]="item._id.toString()==checkedsubmenu && isMenuOpen">
+                                      <li [routerLink]="['/d/df/createform',item._id]">View Form</li>
+                                      <li [routerLink]="['/d/ds/viewstatstab',item._id]">View Statistics</li>
+                                      <li>Link Embed</li>
+                                      <li class="divider1"></li>
+                                      <li style="color: #EB2828;" (click)="deleteRoot(item)">
+                                        Delete Form
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="20" class="fill-error">
+                                            <path d="M12 2h5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1zm3.8 6l-.613 9.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.205 8H15.8zM7 9a1 1 0 0 0-1 1v7a1 1 0 0 0 2 0v-7a1 1 0 0 0-1-1zm4 0a1 1 0 0 0-1 1v7a1 1 0 0 0 2 0v-7a1 1 0 0 0-1-1z"></path>            
+                                        </svg> -->
+                                      </li>
+                                    </ul>
+                                    
+                                </label>
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>        
+            </div>
+        </div>
+        <!-- <div class="card-container">
+            <div class="card"  style="border: 1px solid #282829;background-color: #F0F0F0;">
+                <div class="cardheadcont" style="display:flex; flex-direction:column; align-items: center;">
+                    <div class="name" style="color: #756ddd;">
+                        Create New Quiz
+                    </div>
+                    <div class="createicon" style="margin-top: 15px;">
+                        <img src="../../../assets/icons/milgyapurple.svg" style="width: 60px;" alt="">
+                    </div>
+                </div>
+            </div>        
+        </div> -->
+    </div>
+    
+    <!-- <div *ngIf="flag" class="details-modal">
+        <div class="details-modal-cont">
+            <form>
+                <label for="basic-url" class="form-label">Form Title</label>
+                <input type="text" matInput [(ngModel)]="selected.name" (change)="onChange()" class="form-control" style="height: 38.19px !important;">
+            </form>
+            <div class="details-modal-close" (click)="onClose()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+            </div>
+        </div>
+    </div> -->
+    
+    <div *ngIf="render" class="action">
+        <button color="accent" class="action-button" aria-label="edit">
+            edit
+        </button>
+        <!-- <button mat-mini-fab color="accent" class="action-button" (click)="addRoot()" aria-label="add">
+            add
+        </button>
+        <button mat-mini-fab color="accent" class="action-button" (click)="deleteRoot(selected)" aria-label="delete">
+            delete
+        </button> -->
+    </div>
+</div>
+
+
+<!-- card ke andar -->
+                    <!--<div class="title">
+                        {{item._id.toString()}}
+                    </div> -->
+                    <!-- <div class="name">
+                        {{item.name}}
+                    </div> -->
+                    <!-- <div class="buttons" *ngIf="item._id.toString()===selected._id.toString()">
+                        <button class="editform">Edit form</button>
+                        <button class="stats">View Statistics</button>
+                    </div> -->
+                    <!--<div class="description">
+                        {{item.description}}
+                    </div> -->

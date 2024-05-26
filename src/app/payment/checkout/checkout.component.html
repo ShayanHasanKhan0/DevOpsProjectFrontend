@@ -1,0 +1,72 @@
+<div class="package">
+    <h1 style="margin: 0;">Product Path Platinum Package $10 subscription</h1>
+</div>
+<div class="dropinparent">
+    <div class="secure"><span>Secure Payments </span><img style="color: #5d768d; margin-left: 4px; margin-bottom: 2px;" src="../../../assets/icons/padlock.png" alt=""></div>
+    <div class="" id="dropin-container" style="width: 500px;"></div>
+    <button id="submit-button" type="button" class="approve-btn" [disabled]="addPMButtonDisable"><img src="../../../assets//icons/addpaymethod.svg" style="width: 12px; margin-right: 4px;" alt=""> Add payment method<div class="spinner2"></div></button>
+</div>
+
+<div class="subscriptioncontainer">
+
+  <p class="err" style="color: red;font-weight: bold;font-size: 20px;" *ngIf="avail">{{msg}}</p>
+  
+  <p class="err" style="color: red;font-weight: bold;font-size: 20px;" *ngIf="avail1">{{msg1}}</p>
+
+    <!-- <div class="storedpaymentmethods">
+        Add payment method
+        <div class="methods" *ngFor="let method of listofmethods">
+
+        </div>
+        <button id="subscribeButton">subscribe</button>
+    </div> -->
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Select Payment Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of listpaymentMethod" (click)="onClick(item)" [class.activerow]="item.paymentMethodToken===selected.paymentMethodToken">
+                <td>
+                    <div class="icon">
+                        <img *ngIf="item.cardservice=='PAYPAL'" src="../../../assets/icons/paypal (1).svg" style="width:30px" alt="">
+                        <img *ngIf="item.cardservice!='PAYPAL'" src="../../../assets/icons/cc1.svg" style="width:30px" alt="">
+                    </div>
+                    <div class="methodscontainer">
+                        <div class="method">
+                            <div *ngIf="item.cardservice=='PAYPAL'">
+                                <h3>Paypal</h3>
+                                {{item.buyeraccount}}
+                            </div>
+                            <div *ngIf="item.cardservice!='PAYPAL'">
+                                <h3>{{item.cardservice}}</h3>
+                                ending with {{item.endingDigits}}
+                            </div>
+                        </div>
+                        <div class="subbuttons">
+                            <button class="subscribebutton" *ngIf="item.paymentMethodToken===selected.paymentMethodToken" (click)="createSubscription()" [disabled]="subscriptionButtonDisable">subscribe <div class="spinner"></div></button>
+                            <button class="removepaymentbutton" *ngIf="item.paymentMethodToken===selected.paymentMethodToken" (click)="removePaymentMethod()"  [disabled]="PMremoveButtonDisable">remove payment method <div class="spinner1"></div></button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- <div class="" *ngIf="subscription==='subscriptionCancelled'">
+    <h2>You are subscribed till the end of month but your subscription has been cancelled!</h2>
+</div>
+
+<div class="subscribed" *ngIf="subscription==='subscribed'">
+    <h2>You are subscribed!</h2>
+    <button class="cancelsubscription" (click)="cancelSubscription()">
+        Cancel Subscription
+    </button>
+</div> -->
+
+<!-- <div class="loading" *ngIf="subscription==='loading'">
+  <app-loading></app-loading>
+</div> -->

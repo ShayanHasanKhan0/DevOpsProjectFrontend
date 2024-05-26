@@ -1,0 +1,187 @@
+/* Shayans */
+/* google fonts imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;800&display=swap');
+/*  */
+
+/* head */
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.heading1 {
+    margin-top: 40px;
+    font-size: 23px;
+    font-family: 'typeformsegoe';
+    border-bottom: 1px solid #E8E8E8;
+    width: 95%;
+}
+.resp {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.heading2 {
+    min-height:80vh;
+    margin-top: 30px;
+    font-size: 23px;
+    font-family: 'typeformsegoe';
+    /* border-bottom: 1px solid #E8E8E8; */
+    width: 95%;
+    display: flex;
+    /* justify-content: center;
+    align-items: flex-start; */
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+.chartname {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: #737373;
+}
+
+/* table */
+
+.subscribebuttons{
+    width: 100px;
+    height: 100px;
+}
+.loading {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+/*  */
+.main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 1200px;
+}
+/* head */
+.heading {
+    width: 95%;
+    margin-top: 20px;
+}
+.pricing {
+    font-family: 'Inter', sans-serif;
+    color: #262627;
+    font-size: 75px;
+    line-height: 30px;
+}
+.para {
+    font-family: 'typeformsegoe';
+    font-size: 20px;
+}
+/* table */
+.table {
+    width: 90%;
+    border-collapse: collapse;
+    /* letter-spacing: -0.01em; */
+}
+.tr {
+    width: 100%;
+}
+.tr1 {
+    font-family: 'typeformsegoe';
+}
+.td {
+    padding: 0.75rem;
+}
+.plan {
+    font-size: 17px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+.details {
+    font-size: 17px;
+    font-family: 'typeformsegoe';
+    text-align: center;
+}
+.details1 {
+    font-size: 17px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    text-align: center;
+}
+.monthly {
+    font-size: 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    line-height: 36px;
+}
+.font-weight-normal {
+    font-size: 24px;
+    font-family: 'typeformsegoe';
+    font-weight: 300;
+}
+.subscribe {
+    width: 130px;
+    height: 40px;
+    border-radius: 5px;
+    font-size:large;
+    font-family: 'Source Sans Pro', sans-serif;
+    border: none;
+    background-color: #6127FF;
+    color: white;
+    cursor: pointer;
+}
+.subscribe:hover {
+    background-color: #3b27d9;
+}
+.trail {
+    color: #6127FF;
+}
+.trail:hover {
+    color: black;
+}
+
+/* button */
+.sidebuttons {
+    width: 170px;
+    height: 35px;
+    border-radius: 4px;
+    font-family: 'typeformsegoe';
+    font-size: 14px;
+    border: none;
+    background-color: #262627;
+    color: white;
+    cursor: pointer;
+    
+    /* line-height: 18px; */
+  
+    transition:all 0.1s linear;
+    
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .sidebuttons:hover {
+    background-color: #474747;
+  }
+.box2 {
+    font-family: 'typeformsegoe';
+    color: #737373;
+    font-size: 28px;
+}
+.noresponse {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 80px;
+}
+.paginationcont {
+    margin-top: 30px;
+    margin-bottom: 60px;
+    display: flex;
+    width: 90%;
+    justify-content: flex-start;
+}
+.paginationcontrols {
+    font-size: 15px;
+}

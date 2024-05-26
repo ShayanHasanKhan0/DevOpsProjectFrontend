@@ -1,0 +1,77 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h1 class="mb-0">Statistics</h1>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Quiz Name</th>
+                <!-- <th scope="col">Budget</th>
+                <th scope="col">Status</th> -->
+                <th scope="col">Number of people who took the quiz</th>
+                <!-- <th scope="col">Completion</th> -->
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of list | paginate: { itemsPerPage: 5, currentPage: p }">
+                
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-warning"></i> {{item.name}}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-warning"></i> {{item.count}}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-warning"></i> <button [routerLink] = "['/d/ds/viewstats',item._id]">View Details</button>
+                  </span>
+                </td>
+
+                <!-- <td class="text-right">
+                  <div ngbDropdown placement="bottom-right">
+                    <a class="btn btn-sm btn-icon-only text-light"  ngbDropdownToggle>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div ngbDropdownMenu class=" dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" href="javascript:void(0)">Action</a>
+                      <a class="dropdown-item" href="javascript:void(0)">Another action</a>
+                      <a class="dropdown-item" href="javascript:void(0)">Something else here</a>
+                    </div>
+                  </div>
+                </td> -->
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer py-4">
+          <nav aria-label="...">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loading" *ngIf="loading">
+  <app-loading></app-loading>
+</div>

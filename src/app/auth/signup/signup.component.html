@@ -1,0 +1,53 @@
+<div class="container">
+   <div class="left">
+      <div class="leftinner">
+         <h1 class="typeformfont">ProductPath</h1>
+         <h1 class= ""style="display: inline-block; margin-right:5px">Sign Up</h1>
+         <span class="dot"></span>
+         <span class="dot"></span>
+         <span class="dot"></span>
+         <p>create a new account</p>
+         <!-- signup -->
+         <form #f="ngForm" (ngSubmit)="onSubmitRegister(f)">
+           <label for="email">Email</label>
+           <input class="inputfields" type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            email spellcheck="false" ngModel required #email="ngModel" />
+           
+           <label for="password">Password</label>
+           <input class="inputfields" type="password" name="p1" autocomplete="off" spellcheck="false" ngModel required #p1="ngModel" />
+           
+           <label for="confirm">Confirm Password</label>
+           <input class="inputfields" type="password" name="p2" autocomplete="off" spellcheck="false" ngModel required #p2="ngModel" />
+           
+           <div class="accept">
+             <input type="checkbox" id="terms">
+             <label for="terms">I agree to the <a href="#">terms of service</a></label>
+           </div>
+   
+           <input class="button" type="submit" [disabled]="f.invalid" value="Sign Up" />
+           
+         </form>
+         <p>already have an account? <a [routerLink]="['/signin']" href="">log in</a></p>
+         <!-- google -->
+         <div class="or or--x seperator" aria-role="presentation">or</div>
+         <a href="#" class="btn btn-google">
+            <img src="../../../assets/images/icons8-google-48.png" style="width: 30px"/>
+            <div class="googlelabel">Sign Up with Google</div>
+         </a>
+         
+      </div>
+   </div>
+   
+   <div class="right">
+      <div class="cont1" style="width: 100%;">
+         <!-- <div class="heading">
+            <h2>convert your sales into growth!</h2>
+         </div> -->
+         <div class="svg">
+            <h2 class="heading typeformfont">help your customers make the right choice!</h2>
+            <img class="svgpic" src="../../../assets/images/pexels-wilson-vitorino-3260090.jpg" alt="">
+         </div>
+      </div>
+   </div>
+   
+</div>

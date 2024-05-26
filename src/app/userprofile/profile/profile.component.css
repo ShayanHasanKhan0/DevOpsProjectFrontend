@@ -1,0 +1,84 @@
+.loading {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+
+/* head */
+.background {
+    background-color: #FFFF;
+    height: 100vh;
+}
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.heading1 {
+    margin-top: 40px;
+    font-size: 23px;
+    font-family: 'typeformsegoe';
+    border-bottom: 1px solid #E8E8E8;
+    width: 95%;
+}
+.chartname {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: #737373;
+}
+.maincont {
+    margin-top: 30px;
+    width: 95%;
+}
+.overall {
+    font-size: 25px;
+    font-family: 'apercupro';
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.box1 {
+    font-family: 'typeformsegoe';
+    font-size: 15px;
+    display:block;
+    margin-bottom: 10px;
+}
+/* .btn {
+    display:block;
+    margin-top: 20px;
+} */
+.inputfield {
+    margin-bottom: 15px;
+    width: 250px;
+    height: 25px;
+    border-radius: 4px;
+    border: 1px solid #262627;
+    padding: 7px;
+    font-family: 'typeformsegoe';
+    font-size: 15px;
+    line-height: 25px;
+}
+.changebutton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-family: 'typeformsegoe';
+    width: 145px;
+    height: 32px;
+    border-radius: 3px;
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    background-color: #262627;
+    color: white;
+}
+.changebutton:hover {
+    background-color: #474747;
+}
+.changebutton:disabled{
+    background-color: #868686;
+}
+.social-text {
+    font-family: 'typeformsegoe';
+}

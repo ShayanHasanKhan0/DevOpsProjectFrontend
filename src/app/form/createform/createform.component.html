@@ -1,0 +1,529 @@
+<app-quiztabs></app-quiztabs>
+
+<div class="loading" *ngIf="isloading">
+    <app-loading></app-loading>
+</div>
+
+
+<!-- chart -->
+<div *ngIf="render" class="app-chart-cont">
+    <div class="app-chart-cont-center" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp()" (mousemove)="onMouseMove($event)" >
+        <!-- <h1>{{root.name}}</h1> -->
+        <svg xmlns="http://www.w3.org/2000/svg"
+            [attr.width]="WIDTH"
+            [attr.height]="HEIGHT"
+            [attr.viewBox]="viewBox"
+            class="app-chart">
+            <!-- <g *ngFor="let e of chartElementList" (click)="onClick(e.item)" (dblclick)="onDblClick(e.item)"> -->
+            <g *ngFor="let e of chartElementList; let ndx = index;" (click)="click($event, e.item)">
+                <!-- whole -->
+                <path *ngIf="e.connection" [attr.d]="e.connection" 
+                [style.stroke]="colors[e.category % colors.length]"
+                class="app-chart-connection"/>
+                <rect class="app-chart-item"
+                    [class.app-chart-selected]="e.item._id===selected._id"
+                    [style.fill]="colors[e.category % colors.length]"
+                    
+                    [attr.x]="e.x - ELEMENT_WIDTH/2"
+                    [attr.y]="e.y - ELEMENT_HEIGHT/2"
+                    [attr.width]="ELEMENT_WIDTH"
+                    [attr.height]="ELEMENT_HEIGHT"
+                    rx="6" ry="6">
+                </rect>
+
+                <!-- heading  -->
+                <rect class="app-chart-item-heading" *ngIf="ndx!=0"
+                    [class.app-chart-selected-heading]="e.item._id===selected._id"
+                    
+                    [attr.x]="e.x - ELEMENT_WIDTH/2"
+                    [attr.y]="e.y - ELEMENT_HEIGHT/2"
+                    [attr.width]="ELEMENT_WIDTH"
+                    [attr.height]="ELEMENT_HEIGHT - 45"
+                    rx="6" ry="6"
+                    >
+                </rect>
+                <!-- <div *ngIf="e.item._id != rootId"> -->
+
+                    <!-- <div *ngIf='(e.item.selectText ||  e.item.selectText === "" || e.item.selectImageName ||  e.item.selectImageName === "" || e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0)'> -->
+                        <text *ngIf='e.item.selectText ||  e.item.selectText===""' [attr.x]="e.x" [attr.y]="e.y - 20" class="app-chart-item-text">
+                            {{e.item.selectText}}
+                        </text>
+                        <text *ngIf='(!(e.item.selectText ||  e.item.selectText==="") && !(e.item.selectImageName ||  e.item.selectImageName === "") && !(e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0) && (e.item._id != root._id))' [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                            User Input
+                        </text>
+                        <text *ngIf='e.item.selectImageName ||  e.item.selectImageName === ""' [attr.x]="e.x" [attr.y]="e.y - 20" class="app-chart-item-text">
+                            {{e.item.selectImageName}}
+                        </text>
+                        <text *ngIf="e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0" [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                            {{e.item.rangeFrom}} - {{e.item.rangeTo}}
+                        </text>
+                    <!-- </div> -->
+                    <!-- <ng-template #userI>
+                        <text>
+                            User Input
+                        </text>
+                    </ng-template> -->
+                    <text *ngIf='(e.item.question || e.item.question === "") && !(e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                        {{e.item.question}}
+                    </text>
+                    <text *ngIf='(e.item.question || e.item.question === "") && (e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y + 12.5" class="app-chart-item-text">
+                        {{e.item.question}}
+                    </text>
+                    <text *ngIf='(e.item.products || e.item.products === []) && !(e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                        Product
+                    </text>
+                    <text *ngIf='(e.item.products || e.item.products === []) && (e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y + 12.5" class="app-chart-item-text">
+                        Product
+                    </text>
+                    <!-- <ng-template #produccc>
+                        <text>
+                            Product
+                        </text>
+                    </ng-template> -->
+                <!-- </div> -->
+                <!-- <div *ngIf="e.item._id == rootId">
+                    <text [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                        Question
+                    </text>
+                </div> -->
+                <!-- <text *ngIf="e.item.componentType != 'Component Type'" [attr.x]="e.x" [attr.y]="e.y"
+                    class="app-chart-item-text">{{e.item.componentType}}
+                </text> -->
+            </g>
+        </svg>
+        <div class="app-chart-toolbox">
+            <div (click)="onZoomIn()" class="tool">
+                <img src="../../../assets/icons/zoominblack.svg" style="width: 25px;" alt="zoom in">
+            </div>
+            <div (click)="onZoomOut()" class="tool">
+                <img src="../../../assets/icons/zoomoutblack.svg" style="width: 25px;" alt="zoom in">
+            </div>
+            <div (click)="onPan()" class="tool">
+                <img src="../../../assets/icons/handblack.svg" style="width: 27px;" alt="zoom in">
+            </div>
+        </div>    
+    </div>
+    <div class="app-chartSidebar app-h-100 app-flex app-flex-col app-flex-align-l app-flex-jus-bw">
+        <!-- top -->
+        <div class="app-chartSidebar-top app-h-auto app-flex app-flex-col app-flex-align-c app-flex-jus-fs">
+            <!-- component type -->
+            <div class="app-chartSidebar-section app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs">
+                <div class="app-chartSidebar-section-heading app-w-100 app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                    <label class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Component Type</label>
+                    <label class="app-p-0 app-m-0 font-16 font-inter font-bold colour-darkGrey">?</label>
+                </div>
+                <ul class="app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                    <li *ngFor="let component of componentTypes" class="app-radio app-p-0 app-m-0 app-flex app-flex-row app-flex-align-c app-flex-jus-fs">                                    
+                        <input [(ngModel)]="selected.componentType" (click)="onSelectComponentType(component)" type="radio" [value]="component" class="app-chartSidebar-componentType-input app-m-0 app-p-0" [id]="component" name="componentType">                        
+                        <label [for]="component" class="app-radio-button app-m-0 app-cursor-pointer"></label>
+                        <label [for]="component" class="app-radio-label app-cursor-pointer app-m-0 font-14 font-regular colour-darkGrey font-inter">{{component}}</label>                        
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- question type -->
+            <div *ngIf='selected.componentType === "Question"' class="app-chartSidebar-section app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs app-pos-rel">
+                <div class="app-chartSidebar-section-heading app-w-100 app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                    <label class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Question Type</label>
+                    <label class="app-p-0 app-m-0 font-16 font-inter font-bold colour-darkGrey">?</label>
+                </div>
+                <div (click)="onClickQuestionType($event)" class="app-cursor-pointer app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                    <label class="app-cursor-pointer app-m-0 app-p-0 font-16 font-regular colour-darkGrey font-inter">
+                        {{selected.questionType}}
+                    </label>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -4 16 16" width="16" class="fill-darkGrey">
+                        <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
+                    </svg>
+                    <ul *ngIf="questionTypeMenuFlag" class="app-dropdown-menu app-p-0 app-m-0">
+                        <div *ngFor="let question of questionTypes">
+                            <li *ngIf='question !== selected.questionType' (click)="onSelectQuestionType(question)" class="app-dropdown-menu-items app-cursor-pointer font-14 font-regular colour-darkGrey font-inter">{{question}}</li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- enter question -->
+            <div *ngIf='selected.componentType === "Question"' class="app-chartSidebar-section app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs">
+                <div class="app-chartSidebar-section-heading app-w-100 app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                    <label class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Enter question</label>
+                </div>
+                <div class="app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                    <input (change)="updateNode({_id: selected._id.toString(), rootId: selected.rootId, question: selected.question}, 'question')" [(ngModel)]="selected.question" class="app-input app-m-0 app-p-0 app-w-100" type="text" placeholder="Enter Your Question">
+                </div>
+            </div>
+
+            <!-- Scroll section -->
+            <div *ngIf='selected.componentType === "Question" || selected.componentType === "Product"' class="app-chartSidebar-scrollSection app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs">
+                <div class="app-chartSidebar-scrollSection-heading app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                    <label *ngIf='selected.componentType === "Question"' class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Answers</label>
+                    <label *ngIf='selected.componentType === "Product"' class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Products</label>
+                </div>
+                <!-- answers -->
+                <ul *ngIf='selected.componentType === "Question" && children.length' class="app-chartSidebar-list app-chartSidebar-answer app-m-0 app-p-0">
+                    <li *ngFor="let child of children; let i = index" class="app-chartSidebar-list-item app-flex app-flex-row app-flex-jus-fs app-flex-align-c app-h-auto app-pos-rel">
+                        <label  *ngIf='selected.questionType === "Select Text" || selected.questionType === "Range Slider"' class="app-chartSidebar-answer-numbering app-m-0 app-h-100 app-flex app-flex-row app-flex-align-c app-flex-jus-fs font-14 font-inter font-semibold colour-darkGrey">
+                            {{i+1}}.
+                        </label>
+                        
+                        <input *ngIf='selected.questionType === "Select Text"' [(ngModel)]="child.selectText" (change)="updateNode({_id: child._id.toString(), rootId: selected.rootId, selectText: child.selectText}, 'selectText')" class="app-input app-chartSidebar-answer-text app-m-0 app-p-0" type="text" placeholder="Enter Your Question">
+
+                        <input *ngIf='selected.questionType === "Range Slider"' (click)="setTemp(child.rangeFrom)" (change)="editRange(child, 'rangeFrom')" [(ngModel)]="child.rangeFrom" class="app-number-input app-chartSidebar-answer-range app-m-0 app-p-0" type="number">
+                        <label *ngIf='selected.questionType === "Range Slider"' class="app-chartSidebar-answer-range-dash app-m-0 font-16 font-inter font-regular colour-darkGrey">-</label>
+                        <input *ngIf='selected.questionType === "Range Slider"' (click)="setTemp(child.rangeTo)" (change)="editRange(child, 'rangeTo')" [(ngModel)]="child.rangeTo" class="app-number-input app-chartSidebar-answer-range app-m-0 app-p-0" type="number">
+
+                        <div *ngIf='selected.questionType === "Select Image"' class="app-chartSidebar-answer-image app-m-0 app-p-0 app-flex app-flex-row app-flex-jus-fs app-flex-align-c app-h-auto">
+                            <label class="app-chartSidebar-answer-numbering app-m-0 app-h-100 app-flex app-flex-row app-flex-align-c app-flex-jus-fs font-14 font-inter font-semibold colour-darkGrey">
+                                {{i+1}}.
+                            </label>
+                            <label class="app-chartSidebar-answer-image-label app-m-0 font-16 font-inter font-regular colour-darkGrey">{{child.selectImageName}}</label>
+                        </div>
+                        <input *ngIf='selected.questionType === "Select Image"' (change)="updateNodeImage($event, child.root, child._id.toString())" class="app-chartSidebar-answer-image-file" type="file" [id]="child._id.toString()">                  
+                        <label *ngIf='selected.questionType === "Select Image"' [for]="child._id.toString()" class="app-chartSidebar-answer-image-preview app-cursor-pointer app-flex app-flex-row app-flex-jus-c app-flex-align-c app-pos-rel">                            
+                            <img class="app-chartSidebar-image-src" src="https://images.unsplash.com/photo-1621553845587-dd7094ef9c03?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80">                            
+                            <div class="app-chartSidebar-answer-image-upload app-flex-row app-flex-jus-c app-flex-align-c">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -3 18 18" width="20" class="fill-white">
+                                    <path d="M8 3.414v5.642a1 1 0 1 1-2 0V3.414L4.879 4.536A1 1 0 0 1 3.464 3.12L6.293.293a1 1 0 0 1 1.414 0l2.829 2.828A1 1 0 1 1 9.12 4.536L8 3.414zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z"></path>
+                                </svg>
+                            </div>
+                        </label>
+
+                        <label *ngIf='selected.questionType === "User Input"' class="app-chartSidebar-answer-userInput-label app-m-0 font-16 font-inter font-regular colour-darkGrey">{{selected.userInput}}</label>
+                        
+                        <div (click)="deleteNode(child, 'child')" class="app-chartSidebar-closeButton app-cursor-pointer app-flex app-flex-row app-flex-align-c app-flex-jus-c">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 20 20" width="17" class="fill-white">
+                                <path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path>
+                            </svg>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul *ngIf='selected.componentType === "Question" && !children.length' class="app-chartSidebar-list app-chartSidebar-answer app-m-0 app-p-0">
+                    <svg width="350" height="130" viewBox="0 0 350 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="12" y="22" width="23" height="26" rx="4" fill="#F4F4F4"/>
+                        <rect x="46" y="26" width="159" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="46" y="40" width="282" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="0.5" y="10.5" width="339" height="49" rx="3.5" stroke="#F4F4F4"/>
+                        <rect x="330" width="20" height="20" rx="10" fill="#F4F4F4"/>
+                        <path d="M341.095 9.91676L344.041 6.97009C344.121 6.89322 344.184 6.80127 344.228 6.6996C344.271 6.59793 344.294 6.48858 344.295 6.37793C344.296 6.26728 344.275 6.15755 344.233 6.05513C344.191 5.95272 344.129 5.85968 344.051 5.78143C343.973 5.70319 343.88 5.64131 343.778 5.59941C343.675 5.55751 343.565 5.53642 343.455 5.53738C343.344 5.53835 343.235 5.56134 343.133 5.60501C343.031 5.64868 342.939 5.71217 342.863 5.79176L339.916 8.73759L336.97 5.79176C336.893 5.71217 336.801 5.64868 336.7 5.60501C336.598 5.56134 336.489 5.53835 336.378 5.53738C336.267 5.53642 336.158 5.55751 336.055 5.59941C335.953 5.64131 335.86 5.70319 335.781 5.78143C335.703 5.85968 335.641 5.95272 335.599 6.05513C335.558 6.15755 335.536 6.26728 335.537 6.37793C335.538 6.48858 335.561 6.59793 335.605 6.6996C335.649 6.80127 335.712 6.89322 335.792 6.97009L338.738 9.91593L335.792 12.8626C335.712 12.9395 335.649 13.0314 335.605 13.1331C335.561 13.2348 335.538 13.3441 335.537 13.4548C335.536 13.5654 335.558 13.6751 335.599 13.7776C335.641 13.88 335.703 13.973 335.781 14.0513C335.86 14.1295 335.953 14.1914 336.055 14.2333C336.158 14.2752 336.267 14.2963 336.378 14.2953C336.489 14.2943 336.598 14.2714 336.7 14.2277C336.801 14.184 336.893 14.1205 336.97 14.0409L339.916 11.0951L342.863 14.0409C342.939 14.1205 343.031 14.184 343.133 14.2277C343.235 14.2714 343.344 14.2943 343.455 14.2953C343.565 14.2963 343.675 14.2752 343.778 14.2333C343.88 14.1914 343.973 14.1295 344.051 14.0513C344.129 13.973 344.191 13.88 344.233 13.7776C344.275 13.6751 344.296 13.5654 344.295 13.4548C344.294 13.3441 344.271 13.2348 344.228 13.1331C344.184 13.0314 344.121 12.9395 344.041 12.8626L341.095 9.91593V9.91676Z" fill="white"/>
+                        <rect x="12" y="92" width="23" height="26" rx="4" fill="#F4F4F4"/>
+                        <rect x="46" y="96" width="159" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="46" y="110" width="282" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="0.5" y="80.5" width="339" height="49" rx="3.5" stroke="#F4F4F4"/>
+                        <rect x="330" y="70" width="20" height="20" rx="10" fill="#F4F4F4"/>
+                        <path d="M341.095 79.9168L344.041 76.9701C344.121 76.8932 344.184 76.8013 344.228 76.6996C344.271 76.5979 344.294 76.4886 344.295 76.3779C344.296 76.2673 344.275 76.1575 344.233 76.0551C344.191 75.9527 344.129 75.8597 344.051 75.7814C343.973 75.7032 343.88 75.6413 343.778 75.5994C343.675 75.5575 343.565 75.5364 343.455 75.5374C343.344 75.5383 343.235 75.5613 343.133 75.605C343.031 75.6487 342.939 75.7122 342.863 75.7918L339.916 78.7376L336.97 75.7918C336.893 75.7122 336.801 75.6487 336.7 75.605C336.598 75.5613 336.489 75.5383 336.378 75.5374C336.267 75.5364 336.158 75.5575 336.055 75.5994C335.953 75.6413 335.86 75.7032 335.781 75.7814C335.703 75.8597 335.641 75.9527 335.599 76.0551C335.558 76.1575 335.536 76.2673 335.537 76.3779C335.538 76.4886 335.561 76.5979 335.605 76.6996C335.649 76.8013 335.712 76.8932 335.792 76.9701L338.738 79.9159L335.792 82.8626C335.712 82.9395 335.649 83.0314 335.605 83.1331C335.561 83.2348 335.538 83.3441 335.537 83.4548C335.536 83.5654 335.558 83.6751 335.599 83.7776C335.641 83.88 335.703 83.973 335.781 84.0513C335.86 84.1295 335.953 84.1914 336.055 84.2333C336.158 84.2752 336.267 84.2963 336.378 84.2953C336.489 84.2943 336.598 84.2714 336.7 84.2277C336.801 84.184 336.893 84.1205 336.97 84.0409L339.916 81.0951L342.863 84.0409C342.939 84.1205 343.031 84.184 343.133 84.2277C343.235 84.2714 343.344 84.2943 343.455 84.2953C343.565 84.2963 343.675 84.2752 343.778 84.2333C343.88 84.1914 343.973 84.1295 344.051 84.0513C344.129 83.973 344.191 83.88 344.233 83.7776C344.275 83.6751 344.296 83.5654 344.295 83.4548C344.294 83.3441 344.271 83.2348 344.228 83.1331C344.184 83.0314 344.121 82.9395 344.041 82.8626L341.095 79.9159V79.9168Z" fill="white"/>
+                        <rect x="58.5" y="48.5" width="225" height="43" rx="3.5" fill="white" stroke="#F4F4F4"/>
+                        <path d="M80.5 70C80.5 76.9036 86.0964 82.5 93 82.5C99.9036 82.5 105.5 76.9036 105.5 70C105.5 63.0964 99.9036 57.5 93 57.5C86.0964 57.5 80.5 63.0964 80.5 70Z" stroke="#B8B8B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M101.837 61.1626L84.1624 78.8376" stroke="#B8B8B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M128.67 64.3636V76H127.057L121.142 67.4659H121.034V76H119.278V64.3636H120.903L126.824 72.9091H126.932V64.3636H128.67ZM134.771 76.1761C133.953 76.1761 133.239 75.9886 132.629 75.6136C132.019 75.2386 131.546 74.714 131.209 74.0398C130.872 73.3655 130.703 72.5777 130.703 71.6761C130.703 70.7708 130.872 69.9792 131.209 69.3011C131.546 68.6231 132.019 68.0966 132.629 67.7216C133.239 67.3466 133.953 67.1591 134.771 67.1591C135.589 67.1591 136.304 67.3466 136.913 67.7216C137.523 68.0966 137.997 68.6231 138.334 69.3011C138.671 69.9792 138.839 70.7708 138.839 71.6761C138.839 72.5777 138.671 73.3655 138.334 74.0398C137.997 74.714 137.523 75.2386 136.913 75.6136C136.304 75.9886 135.589 76.1761 134.771 76.1761ZM134.777 74.75C135.307 74.75 135.747 74.6098 136.095 74.3295C136.444 74.0492 136.701 73.6761 136.868 73.2102C137.038 72.7443 137.124 72.2311 137.124 71.6705C137.124 71.1136 137.038 70.6023 136.868 70.1364C136.701 69.6667 136.444 69.2898 136.095 69.0057C135.747 68.7216 135.307 68.5795 134.777 68.5795C134.243 68.5795 133.8 68.7216 133.447 69.0057C133.099 69.2898 132.839 69.6667 132.669 70.1364C132.502 70.6023 132.419 71.1136 132.419 71.6705C132.419 72.2311 132.502 72.7443 132.669 73.2102C132.839 73.6761 133.099 74.0492 133.447 74.3295C133.8 74.6098 134.243 74.75 134.777 74.75ZM146.089 76H144.226L148.413 64.3636H150.442L154.629 76H152.766L149.476 66.4773H149.385L146.089 76ZM146.402 71.4432H152.447V72.9205H146.402V71.4432ZM157.872 70.8182V76H156.173V67.2727H157.804V68.6932H157.912C158.113 68.2311 158.427 67.8598 158.855 67.5795C159.287 67.2992 159.83 67.1591 160.486 67.1591C161.08 67.1591 161.601 67.2841 162.048 67.5341C162.495 67.7803 162.842 68.1477 163.088 68.6364C163.334 69.125 163.457 69.7292 163.457 70.4489V76H161.759V70.6534C161.759 70.0208 161.594 69.5265 161.264 69.1705C160.935 68.8106 160.482 68.6307 159.906 68.6307C159.512 68.6307 159.162 68.7159 158.855 68.8864C158.552 69.0568 158.312 69.3068 158.134 69.6364C157.959 69.9621 157.872 70.3561 157.872 70.8182ZM172.276 69.4034L170.736 69.6761C170.671 69.4792 170.569 69.2917 170.429 69.1136C170.293 68.9356 170.107 68.7898 169.872 68.6761C169.637 68.5625 169.344 68.5057 168.991 68.5057C168.51 68.5057 168.109 68.6136 167.787 68.8295C167.465 69.0417 167.304 69.3163 167.304 69.6534C167.304 69.9451 167.412 70.1799 167.628 70.358C167.844 70.536 168.192 70.6818 168.673 70.7955L170.06 71.1136C170.863 71.2992 171.461 71.5852 171.855 71.9716C172.249 72.358 172.446 72.8598 172.446 73.4773C172.446 74 172.295 74.4659 171.991 74.875C171.692 75.2803 171.274 75.5985 170.736 75.8295C170.202 76.0606 169.582 76.1761 168.878 76.1761C167.901 76.1761 167.103 75.9678 166.486 75.5511C165.868 75.1307 165.49 74.5341 165.349 73.7614L166.991 73.5114C167.094 73.9394 167.304 74.2633 167.622 74.483C167.94 74.6989 168.355 74.8068 168.866 74.8068C169.423 74.8068 169.868 74.6913 170.202 74.4602C170.535 74.2254 170.702 73.9394 170.702 73.6023C170.702 73.3295 170.599 73.1004 170.395 72.9148C170.194 72.7292 169.885 72.589 169.469 72.4943L167.991 72.1705C167.177 71.9848 166.575 71.6894 166.185 71.2841C165.798 70.8788 165.605 70.3655 165.605 69.7443C165.605 69.2292 165.749 68.7784 166.037 68.392C166.325 68.0057 166.723 67.7045 167.23 67.4886C167.738 67.2689 168.319 67.1591 168.974 67.1591C169.918 67.1591 170.66 67.3636 171.202 67.7727C171.743 68.178 172.101 68.7216 172.276 69.4034ZM176.206 76L173.638 67.2727H175.393L177.104 73.6818H177.189L178.905 67.2727H180.661L182.365 73.6534H182.45L184.149 67.2727H185.905L183.342 76H181.609L179.837 69.6989H179.706L177.933 76H176.206ZM191.013 76.1761C190.153 76.1761 189.412 75.9924 188.791 75.625C188.174 75.2538 187.696 74.733 187.359 74.0625C187.026 73.3883 186.859 72.5985 186.859 71.6932C186.859 70.7992 187.026 70.0114 187.359 69.3295C187.696 68.6477 188.166 68.1155 188.768 67.733C189.375 67.3504 190.083 67.1591 190.893 67.1591C191.386 67.1591 191.863 67.2405 192.325 67.4034C192.787 67.5663 193.202 67.822 193.57 68.1705C193.937 68.5189 194.227 68.9716 194.439 69.5284C194.651 70.0814 194.757 70.7538 194.757 71.5455V72.1477H187.82V70.875H193.092C193.092 70.428 193.001 70.0322 192.82 69.6875C192.638 69.339 192.382 69.0644 192.053 68.8636C191.727 68.6629 191.344 68.5625 190.905 68.5625C190.428 68.5625 190.011 68.6799 189.655 68.9148C189.303 69.1458 189.03 69.4489 188.837 69.8239C188.647 70.1951 188.553 70.5985 188.553 71.0341V72.0284C188.553 72.6117 188.655 73.108 188.859 73.517C189.068 73.9261 189.357 74.2386 189.729 74.4545C190.1 74.6667 190.534 74.7727 191.03 74.7727C191.352 74.7727 191.645 74.7273 191.911 74.6364C192.176 74.5417 192.405 74.4015 192.598 74.2159C192.791 74.0303 192.939 73.8011 193.041 73.5284L194.649 73.8182C194.52 74.2917 194.289 74.7064 193.956 75.0625C193.626 75.4148 193.212 75.6894 192.712 75.8864C192.215 76.0795 191.649 76.1761 191.013 76.1761ZM196.642 76V67.2727H198.284V68.6591H198.375C198.534 68.1894 198.814 67.8201 199.216 67.5511C199.621 67.2784 200.08 67.142 200.591 67.142C200.697 67.142 200.822 67.1458 200.966 67.1534C201.114 67.161 201.229 67.1705 201.312 67.1818V68.8068C201.244 68.7879 201.123 68.767 200.949 68.7443C200.775 68.7178 200.6 68.7045 200.426 68.7045C200.025 68.7045 199.667 68.7898 199.352 68.9602C199.042 69.1269 198.795 69.3598 198.614 69.6591C198.432 69.9545 198.341 70.2917 198.341 70.6705V76H196.642ZM208.136 76H206.273L210.46 64.3636H212.489L216.676 76H214.812L211.523 66.4773H211.432L208.136 76ZM208.449 71.4432H214.494V72.9205H208.449V71.4432ZM221.347 76.1705C220.642 76.1705 220.013 75.9905 219.46 75.6307C218.911 75.267 218.479 74.75 218.165 74.0795C217.854 73.4053 217.699 72.5966 217.699 71.6534C217.699 70.7102 217.856 69.9034 218.17 69.233C218.489 68.5625 218.924 68.0492 219.477 67.6932C220.03 67.3371 220.657 67.1591 221.358 67.1591C221.9 67.1591 222.335 67.25 222.665 67.4318C222.998 67.6098 223.256 67.8182 223.438 68.0568C223.623 68.2955 223.767 68.5057 223.869 68.6875H223.972V64.3636H225.67V76H224.011V74.642H223.869C223.767 74.8277 223.619 75.0398 223.426 75.2784C223.237 75.517 222.975 75.7254 222.642 75.9034C222.309 76.0814 221.877 76.1705 221.347 76.1705ZM221.722 74.7216C222.21 74.7216 222.623 74.5928 222.96 74.3352C223.301 74.0739 223.559 73.7121 223.733 73.25C223.911 72.7879 224 72.25 224 71.6364C224 71.0303 223.913 70.5 223.739 70.0455C223.564 69.5909 223.309 69.2367 222.972 68.983C222.634 68.7292 222.218 68.6023 221.722 68.6023C221.21 68.6023 220.784 68.7348 220.443 69C220.102 69.2652 219.845 69.6269 219.67 70.0852C219.5 70.5436 219.415 71.0606 219.415 71.6364C219.415 72.2197 219.502 72.7443 219.676 73.2102C219.85 73.6761 220.108 74.0455 220.449 74.3182C220.794 74.5871 221.218 74.7216 221.722 74.7216ZM231.362 76.1705C230.658 76.1705 230.029 75.9905 229.476 75.6307C228.927 75.267 228.495 74.75 228.18 74.0795C227.87 73.4053 227.714 72.5966 227.714 71.6534C227.714 70.7102 227.872 69.9034 228.186 69.233C228.504 68.5625 228.94 68.0492 229.493 67.6932C230.046 67.3371 230.673 67.1591 231.374 67.1591C231.915 67.1591 232.351 67.25 232.68 67.4318C233.014 67.6098 233.271 67.8182 233.453 68.0568C233.639 68.2955 233.783 68.5057 233.885 68.6875H233.987V64.3636H235.686V76H234.027V74.642H233.885C233.783 74.8277 233.635 75.0398 233.442 75.2784C233.252 75.517 232.991 75.7254 232.658 75.9034C232.324 76.0814 231.893 76.1705 231.362 76.1705ZM231.737 74.7216C232.226 74.7216 232.639 74.5928 232.976 74.3352C233.317 74.0739 233.574 73.7121 233.749 73.25C233.927 72.7879 234.016 72.25 234.016 71.6364C234.016 71.0303 233.929 70.5 233.754 70.0455C233.58 69.5909 233.324 69.2367 232.987 68.983C232.65 68.7292 232.233 68.6023 231.737 68.6023C231.226 68.6023 230.8 68.7348 230.459 69C230.118 69.2652 229.86 69.6269 229.686 70.0852C229.516 70.5436 229.43 71.0606 229.43 71.6364C229.43 72.2197 229.518 72.7443 229.692 73.2102C229.866 73.6761 230.124 74.0455 230.464 74.3182C230.809 74.5871 231.233 74.7216 231.737 74.7216ZM241.872 76.1761C241.012 76.1761 240.272 75.9924 239.651 75.625C239.033 75.2538 238.556 74.733 238.219 74.0625C237.885 73.3883 237.719 72.5985 237.719 71.6932C237.719 70.7992 237.885 70.0114 238.219 69.3295C238.556 68.6477 239.026 68.1155 239.628 67.733C240.234 67.3504 240.942 67.1591 241.753 67.1591C242.245 67.1591 242.723 67.2405 243.185 67.4034C243.647 67.5663 244.062 67.822 244.429 68.1705C244.796 68.5189 245.086 68.9716 245.298 69.5284C245.51 70.0814 245.616 70.7538 245.616 71.5455V72.1477H238.679V70.875H243.952C243.952 70.428 243.861 70.0322 243.679 69.6875C243.497 69.339 243.241 69.0644 242.912 68.8636C242.586 68.6629 242.204 68.5625 241.764 68.5625C241.287 68.5625 240.87 68.6799 240.514 68.9148C240.162 69.1458 239.889 69.4489 239.696 69.8239C239.507 70.1951 239.412 70.5985 239.412 71.0341V72.0284C239.412 72.6117 239.514 73.108 239.719 73.517C239.927 73.9261 240.217 74.2386 240.588 74.4545C240.959 74.6667 241.393 74.7727 241.889 74.7727C242.211 74.7727 242.505 74.7273 242.77 74.6364C243.035 74.5417 243.264 74.4015 243.457 74.2159C243.651 74.0303 243.798 73.8011 243.901 73.5284L245.509 73.8182C245.38 74.2917 245.149 74.7064 244.815 75.0625C244.486 75.4148 244.071 75.6894 243.571 75.8864C243.075 76.0795 242.509 76.1761 241.872 76.1761ZM250.768 76.1705C250.064 76.1705 249.435 75.9905 248.882 75.6307C248.333 75.267 247.901 74.75 247.587 74.0795C247.276 73.4053 247.121 72.5966 247.121 71.6534C247.121 70.7102 247.278 69.9034 247.592 69.233C247.911 68.5625 248.346 68.0492 248.899 67.6932C249.452 67.3371 250.079 67.1591 250.78 67.1591C251.321 67.1591 251.757 67.25 252.087 67.4318C252.42 67.6098 252.678 67.8182 252.859 68.0568C253.045 68.2955 253.189 68.5057 253.291 68.6875H253.393V64.3636H255.092V76H253.433V74.642H253.291C253.189 74.8277 253.041 75.0398 252.848 75.2784C252.659 75.517 252.397 75.7254 252.064 75.9034C251.731 76.0814 251.299 76.1705 250.768 76.1705ZM251.143 74.7216C251.632 74.7216 252.045 74.5928 252.382 74.3352C252.723 74.0739 252.981 73.7121 253.155 73.25C253.333 72.7879 253.422 72.25 253.422 71.6364C253.422 71.0303 253.335 70.5 253.161 70.0455C252.986 69.5909 252.731 69.2367 252.393 68.983C252.056 68.7292 251.64 68.6023 251.143 68.6023C250.632 68.6023 250.206 68.7348 249.865 69C249.524 69.2652 249.267 69.6269 249.092 70.0852C248.922 70.5436 248.837 71.0606 248.837 71.6364C248.837 72.2197 248.924 72.7443 249.098 73.2102C249.272 73.6761 249.53 74.0455 249.871 74.3182C250.215 74.5871 250.64 74.7216 251.143 74.7216Z" fill="#B8B8B8"/>
+                    </svg>                                                                                                                                 
+                </ul>
+
+                
+                <!-- products -->
+                <ul *ngIf='selected.componentType === "Product" && selected.products.length' class="app-chartSidebar-list app-chartSidebar-product app-m-0 app-p-0">                    
+                    <li *ngFor="let product of selected.products" class="app-chartSidebar-list-item app-flex app-flex-row app-flex-jus-fs app-flex-align-c app-h-auto app-w-100 app-pos-rel">                        
+                        <div class="app-chartSidebar-product-field app-flex app-flex-row app-flex-jus-fs app-flex-align-c app-h-auto app-w-100 app-pos-rel">
+                            <div class="app-chartSidebar-product-content app-h-100">
+                                <p class="app-chartSidebar-product-content-text app-m-0 app-p-0 app-w-100 app-chartSidebar-product-content-heading font-14 font-inter font-medium colour-darkBlue">{{product.title}}</p>
+                                <textarea class="app-chartSidebar-product-content-text app-m-0 app-p-0 app-w-100 app-chartSidebar-product-content-para app-input-disabled type-12 font-inter font-regular colour-darkGrey">{{product.description}}</textarea>
+                            </div>
+                            <img class="app-chartSidebar-image-src" src="https://images.unsplash.com/photo-1621553845587-dd7094ef9c03?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80">
+                            <label class="app-chartSidebar-product-hover app-flex-row app-flex-align-c app-flex-jus-c font-16 font-inter app-cursor-pointer font-medium colour-white">Edit Product</label>
+                        </div>
+                        <div (click)="deleteProduct(selected._id.toString(), product._id.toString())" class="app-chartSidebar-closeButton app-cursor-pointer app-flex app-flex-row app-flex-align-c app-flex-jus-c">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 20 20" width="17" class="fill-white">
+                                <path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path>
+                            </svg>
+                        </div>
+                    </li>
+                </ul>
+                <ul *ngIf='selected.componentType === "Product" && !selected.products.length' class="app-chartSidebar-list app-chartSidebar-product app-m-0 app-p-0">
+                    <svg width="350" height="218" viewBox="0 0 350 218" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="330" width="20" height="20" rx="10" fill="#F4F4F4"/>
+                        <path d="M341.095 9.91676L344.041 6.97009C344.121 6.89322 344.184 6.80127 344.228 6.6996C344.271 6.59793 344.294 6.48858 344.295 6.37793C344.296 6.26728 344.275 6.15755 344.233 6.05513C344.191 5.95272 344.129 5.85968 344.051 5.78143C343.973 5.70319 343.88 5.64131 343.778 5.59941C343.675 5.55751 343.565 5.53642 343.455 5.53738C343.344 5.53835 343.235 5.56134 343.133 5.60501C343.031 5.64868 342.939 5.71217 342.863 5.79176L339.916 8.73759L336.97 5.79176C336.893 5.71217 336.801 5.64868 336.7 5.60501C336.598 5.56134 336.489 5.53835 336.378 5.53738C336.267 5.53642 336.158 5.55751 336.055 5.59941C335.953 5.64131 335.86 5.70319 335.781 5.78143C335.703 5.85968 335.641 5.95272 335.599 6.05513C335.558 6.15755 335.536 6.26728 335.537 6.37793C335.538 6.48858 335.561 6.59793 335.605 6.6996C335.649 6.80127 335.712 6.89322 335.792 6.97009L338.738 9.91593L335.792 12.8626C335.712 12.9395 335.649 13.0314 335.605 13.1331C335.561 13.2348 335.538 13.3441 335.537 13.4548C335.536 13.5654 335.558 13.6751 335.599 13.7776C335.641 13.88 335.703 13.973 335.781 14.0513C335.86 14.1295 335.953 14.1914 336.055 14.2333C336.158 14.2752 336.267 14.2963 336.378 14.2953C336.489 14.2943 336.598 14.2714 336.7 14.2277C336.801 14.184 336.893 14.1205 336.97 14.0409L339.916 11.0951L342.863 14.0409C342.939 14.1205 343.031 14.184 343.133 14.2277C343.235 14.2714 343.344 14.2943 343.455 14.2953C343.565 14.2963 343.675 14.2752 343.778 14.2333C343.88 14.1914 343.973 14.1295 344.051 14.0513C344.129 13.973 344.191 13.88 344.233 13.7776C344.275 13.6751 344.296 13.5654 344.295 13.4548C344.294 13.3441 344.271 13.2348 344.228 13.1331C344.184 13.0314 344.121 12.9395 344.041 12.8626L341.095 9.91593V9.91676Z" fill="white"/>
+                        <rect x="11.5" y="44" width="23" height="26" rx="4" fill="#F4F4F4"/>
+                        <rect x="46" y="48" width="159" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="46" y="62" width="190" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="248" y="22" width="70" height="70" rx="4" fill="#F4F4F4"/>
+                        <rect x="0.5" y="10.5" width="339" height="93" rx="3.5" stroke="#F4F4F4"/>
+                        <rect x="330" y="114" width="20" height="20" rx="10" fill="#F4F4F4"/>
+                        <path d="M341.095 123.917L344.041 120.97C344.121 120.893 344.184 120.801 344.228 120.699C344.271 120.598 344.294 120.488 344.295 120.378C344.296 120.267 344.275 120.157 344.233 120.055C344.191 119.952 344.129 119.859 344.051 119.781C343.973 119.703 343.88 119.641 343.778 119.599C343.675 119.557 343.565 119.536 343.455 119.537C343.344 119.538 343.235 119.561 343.133 119.605C343.031 119.648 342.939 119.712 342.863 119.792L339.916 122.737L336.97 119.792C336.893 119.712 336.801 119.648 336.7 119.605C336.598 119.561 336.489 119.538 336.378 119.537C336.267 119.536 336.158 119.557 336.055 119.599C335.953 119.641 335.86 119.703 335.781 119.781C335.703 119.859 335.641 119.952 335.599 120.055C335.558 120.157 335.536 120.267 335.537 120.378C335.538 120.488 335.561 120.598 335.605 120.699C335.649 120.801 335.712 120.893 335.792 120.97L338.738 123.916L335.792 126.862C335.712 126.939 335.649 127.031 335.605 127.133C335.561 127.235 335.538 127.344 335.537 127.455C335.536 127.565 335.558 127.675 335.599 127.777C335.641 127.88 335.703 127.973 335.781 128.051C335.86 128.129 335.953 128.191 336.055 128.233C336.158 128.275 336.267 128.296 336.378 128.295C336.489 128.294 336.598 128.271 336.7 128.227C336.801 128.184 336.893 128.12 336.97 128.041L339.916 125.095L342.863 128.041C342.939 128.12 343.031 128.184 343.133 128.227C343.235 128.271 343.344 128.294 343.455 128.295C343.565 128.296 343.675 128.275 343.778 128.233C343.88 128.191 343.973 128.129 344.051 128.051C344.129 127.973 344.191 127.88 344.233 127.777C344.275 127.675 344.296 127.565 344.295 127.455C344.294 127.344 344.271 127.235 344.228 127.133C344.184 127.031 344.121 126.939 344.041 126.862L341.095 123.916V123.917Z" fill="white"/>
+                        <rect x="11.5" y="158" width="23" height="26" rx="4" fill="#F4F4F4"/>
+                        <rect x="46" y="162" width="159" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="46" y="176" width="190" height="4" rx="2" fill="#F4F4F4"/>
+                        <rect x="248" y="136" width="70" height="70" rx="4" fill="#F4F4F4"/>
+                        <rect x="0.5" y="124.5" width="339" height="93" rx="3.5" stroke="#F4F4F4"/>
+                        <rect x="57.5" y="92.5" width="225" height="43" rx="3.5" fill="white" stroke="#F4F4F4"/>
+                        <path d="M79.5 114C79.5 120.904 85.0964 126.5 92 126.5C98.9036 126.5 104.5 120.904 104.5 114C104.5 107.096 98.9036 101.5 92 101.5C85.0964 101.5 79.5 107.096 79.5 114Z" stroke="#B8B8B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M100.837 105.163L83.1624 122.838" stroke="#B8B8B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M127.67 108.364V120H126.057L120.142 111.466H120.034V120H118.278V108.364H119.903L125.824 116.909H125.932V108.364H127.67ZM133.771 120.176C132.953 120.176 132.239 119.989 131.629 119.614C131.019 119.239 130.546 118.714 130.209 118.04C129.872 117.366 129.703 116.578 129.703 115.676C129.703 114.771 129.872 113.979 130.209 113.301C130.546 112.623 131.019 112.097 131.629 111.722C132.239 111.347 132.953 111.159 133.771 111.159C134.589 111.159 135.304 111.347 135.913 111.722C136.523 112.097 136.997 112.623 137.334 113.301C137.671 113.979 137.839 114.771 137.839 115.676C137.839 116.578 137.671 117.366 137.334 118.04C136.997 118.714 136.523 119.239 135.913 119.614C135.304 119.989 134.589 120.176 133.771 120.176ZM133.777 118.75C134.307 118.75 134.747 118.61 135.095 118.33C135.444 118.049 135.701 117.676 135.868 117.21C136.038 116.744 136.124 116.231 136.124 115.67C136.124 115.114 136.038 114.602 135.868 114.136C135.701 113.667 135.444 113.29 135.095 113.006C134.747 112.722 134.307 112.58 133.777 112.58C133.243 112.58 132.8 112.722 132.447 113.006C132.099 113.29 131.839 113.667 131.669 114.136C131.502 114.602 131.419 115.114 131.419 115.67C131.419 116.231 131.502 116.744 131.669 117.21C131.839 117.676 132.099 118.049 132.447 118.33C132.8 118.61 133.243 118.75 133.777 118.75ZM144.107 120V108.364H148.254C149.16 108.364 149.91 108.528 150.504 108.858C151.099 109.187 151.544 109.638 151.839 110.21C152.135 110.778 152.283 111.419 152.283 112.131C152.283 112.847 152.133 113.491 151.834 114.062C151.538 114.631 151.091 115.081 150.493 115.415C149.898 115.744 149.15 115.909 148.249 115.909H145.396V114.42H148.089C148.661 114.42 149.125 114.322 149.482 114.125C149.838 113.924 150.099 113.652 150.266 113.307C150.432 112.962 150.516 112.57 150.516 112.131C150.516 111.691 150.432 111.301 150.266 110.96C150.099 110.619 149.836 110.352 149.476 110.159C149.12 109.966 148.65 109.869 148.067 109.869H145.862V120H144.107ZM154.205 120V111.273H155.847V112.659H155.938C156.097 112.189 156.377 111.82 156.778 111.551C157.184 111.278 157.642 111.142 158.153 111.142C158.259 111.142 158.384 111.146 158.528 111.153C158.676 111.161 158.792 111.17 158.875 111.182V112.807C158.807 112.788 158.686 112.767 158.511 112.744C158.337 112.718 158.163 112.705 157.989 112.705C157.587 112.705 157.229 112.79 156.915 112.96C156.604 113.127 156.358 113.36 156.176 113.659C155.994 113.955 155.903 114.292 155.903 114.67V120H154.205ZM163.709 120.176C162.891 120.176 162.177 119.989 161.567 119.614C160.957 119.239 160.483 118.714 160.146 118.04C159.809 117.366 159.641 116.578 159.641 115.676C159.641 114.771 159.809 113.979 160.146 113.301C160.483 112.623 160.957 112.097 161.567 111.722C162.177 111.347 162.891 111.159 163.709 111.159C164.527 111.159 165.241 111.347 165.851 111.722C166.461 112.097 166.934 112.623 167.271 113.301C167.608 113.979 167.777 114.771 167.777 115.676C167.777 116.578 167.608 117.366 167.271 118.04C166.934 118.714 166.461 119.239 165.851 119.614C165.241 119.989 164.527 120.176 163.709 120.176ZM163.714 118.75C164.245 118.75 164.684 118.61 165.033 118.33C165.381 118.049 165.639 117.676 165.805 117.21C165.976 116.744 166.061 116.231 166.061 115.67C166.061 115.114 165.976 114.602 165.805 114.136C165.639 113.667 165.381 113.29 165.033 113.006C164.684 112.722 164.245 112.58 163.714 112.58C163.18 112.58 162.737 112.722 162.385 113.006C162.036 113.29 161.777 113.667 161.607 114.136C161.44 114.602 161.357 115.114 161.357 115.67C161.357 116.231 161.44 116.744 161.607 117.21C161.777 117.676 162.036 118.049 162.385 118.33C162.737 118.61 163.18 118.75 163.714 118.75ZM172.94 120.17C172.236 120.17 171.607 119.991 171.054 119.631C170.505 119.267 170.073 118.75 169.759 118.08C169.448 117.405 169.293 116.597 169.293 115.653C169.293 114.71 169.45 113.903 169.764 113.233C170.082 112.562 170.518 112.049 171.071 111.693C171.624 111.337 172.251 111.159 172.952 111.159C173.493 111.159 173.929 111.25 174.259 111.432C174.592 111.61 174.849 111.818 175.031 112.057C175.217 112.295 175.361 112.506 175.463 112.688H175.565V108.364H177.264V120H175.605V118.642H175.463C175.361 118.828 175.213 119.04 175.02 119.278C174.83 119.517 174.569 119.725 174.236 119.903C173.902 120.081 173.471 120.17 172.94 120.17ZM173.315 118.722C173.804 118.722 174.217 118.593 174.554 118.335C174.895 118.074 175.152 117.712 175.327 117.25C175.505 116.788 175.594 116.25 175.594 115.636C175.594 115.03 175.507 114.5 175.332 114.045C175.158 113.591 174.902 113.237 174.565 112.983C174.228 112.729 173.812 112.602 173.315 112.602C172.804 112.602 172.378 112.735 172.037 113C171.696 113.265 171.438 113.627 171.264 114.085C171.094 114.544 171.009 115.061 171.009 115.636C171.009 116.22 171.096 116.744 171.27 117.21C171.444 117.676 171.702 118.045 172.043 118.318C172.387 118.587 172.812 118.722 173.315 118.722ZM185.217 116.381V111.273H186.922V120H185.251V118.489H185.161C184.96 118.955 184.638 119.343 184.195 119.653C183.755 119.96 183.208 120.114 182.553 120.114C181.992 120.114 181.496 119.991 181.064 119.744C180.636 119.494 180.299 119.125 180.053 118.636C179.81 118.148 179.689 117.544 179.689 116.824V111.273H181.388V116.619C181.388 117.214 181.553 117.687 181.882 118.04C182.212 118.392 182.64 118.568 183.166 118.568C183.484 118.568 183.801 118.489 184.115 118.33C184.433 118.17 184.696 117.93 184.905 117.608C185.117 117.286 185.221 116.877 185.217 116.381ZM192.881 120.176C192.036 120.176 191.309 119.985 190.699 119.602C190.093 119.216 189.627 118.684 189.301 118.006C188.975 117.328 188.812 116.551 188.812 115.676C188.812 114.79 188.979 114.008 189.312 113.33C189.646 112.648 190.116 112.116 190.722 111.733C191.328 111.35 192.042 111.159 192.864 111.159C193.527 111.159 194.117 111.282 194.636 111.528C195.155 111.771 195.574 112.112 195.892 112.551C196.214 112.991 196.405 113.504 196.466 114.091H194.812C194.722 113.682 194.513 113.33 194.188 113.034C193.866 112.739 193.434 112.591 192.892 112.591C192.419 112.591 192.004 112.716 191.648 112.966C191.295 113.212 191.021 113.564 190.824 114.023C190.627 114.477 190.528 115.015 190.528 115.636C190.528 116.273 190.625 116.822 190.818 117.284C191.011 117.746 191.284 118.104 191.636 118.358C191.992 118.612 192.411 118.739 192.892 118.739C193.214 118.739 193.506 118.68 193.767 118.562C194.032 118.441 194.254 118.269 194.432 118.045C194.614 117.822 194.741 117.553 194.812 117.239H196.466C196.405 117.803 196.222 118.307 195.915 118.75C195.608 119.193 195.197 119.542 194.682 119.795C194.17 120.049 193.57 120.176 192.881 120.176ZM202.357 111.273V112.636H197.589V111.273H202.357ZM198.868 109.182H200.567V117.438C200.567 117.767 200.616 118.015 200.714 118.182C200.813 118.345 200.94 118.456 201.095 118.517C201.254 118.574 201.427 118.602 201.612 118.602C201.749 118.602 201.868 118.593 201.97 118.574C202.072 118.555 202.152 118.54 202.209 118.528L202.516 119.932C202.417 119.97 202.277 120.008 202.095 120.045C201.913 120.087 201.686 120.11 201.413 120.114C200.966 120.121 200.55 120.042 200.163 119.875C199.777 119.708 199.464 119.451 199.226 119.102C198.987 118.754 198.868 118.316 198.868 117.79V109.182ZM209.589 120H207.726L211.913 108.364H213.942L218.129 120H216.266L212.976 110.477H212.885L209.589 120ZM209.902 115.443H215.947V116.92H209.902V115.443ZM222.8 120.17C222.095 120.17 221.466 119.991 220.913 119.631C220.364 119.267 219.932 118.75 219.618 118.08C219.307 117.405 219.152 116.597 219.152 115.653C219.152 114.71 219.309 113.903 219.624 113.233C219.942 112.562 220.377 112.049 220.93 111.693C221.483 111.337 222.11 111.159 222.811 111.159C223.353 111.159 223.788 111.25 224.118 111.432C224.451 111.61 224.709 111.818 224.891 112.057C225.076 112.295 225.22 112.506 225.322 112.688H225.425V108.364H227.124V120H225.464V118.642H225.322C225.22 118.828 225.072 119.04 224.879 119.278C224.69 119.517 224.429 119.725 224.095 119.903C223.762 120.081 223.33 120.17 222.8 120.17ZM223.175 118.722C223.663 118.722 224.076 118.593 224.413 118.335C224.754 118.074 225.012 117.712 225.186 117.25C225.364 116.788 225.453 116.25 225.453 115.636C225.453 115.03 225.366 114.5 225.192 114.045C225.018 113.591 224.762 113.237 224.425 112.983C224.088 112.729 223.671 112.602 223.175 112.602C222.663 112.602 222.237 112.735 221.896 113C221.555 113.265 221.298 113.627 221.124 114.085C220.953 114.544 220.868 115.061 220.868 115.636C220.868 116.22 220.955 116.744 221.129 117.21C221.304 117.676 221.561 118.045 221.902 118.318C222.247 118.587 222.671 118.722 223.175 118.722ZM232.815 120.17C232.111 120.17 231.482 119.991 230.929 119.631C230.38 119.267 229.948 118.75 229.634 118.08C229.323 117.405 229.168 116.597 229.168 115.653C229.168 114.71 229.325 113.903 229.639 113.233C229.957 112.562 230.393 112.049 230.946 111.693C231.499 111.337 232.126 111.159 232.827 111.159C233.368 111.159 233.804 111.25 234.134 111.432C234.467 111.61 234.724 111.818 234.906 112.057C235.092 112.295 235.236 112.506 235.338 112.688H235.44V108.364H237.139V120H235.48V118.642H235.338C235.236 118.828 235.088 119.04 234.895 119.278C234.705 119.517 234.444 119.725 234.111 119.903C233.777 120.081 233.346 120.17 232.815 120.17ZM233.19 118.722C233.679 118.722 234.092 118.593 234.429 118.335C234.77 118.074 235.027 117.712 235.202 117.25C235.38 116.788 235.469 116.25 235.469 115.636C235.469 115.03 235.382 114.5 235.207 114.045C235.033 113.591 234.777 113.237 234.44 112.983C234.103 112.729 233.687 112.602 233.19 112.602C232.679 112.602 232.253 112.735 231.912 113C231.571 113.265 231.313 113.627 231.139 114.085C230.969 114.544 230.884 115.061 230.884 115.636C230.884 116.22 230.971 116.744 231.145 117.21C231.319 117.676 231.577 118.045 231.918 118.318C232.262 118.587 232.687 118.722 233.19 118.722ZM243.325 120.176C242.465 120.176 241.725 119.992 241.104 119.625C240.486 119.254 240.009 118.733 239.672 118.062C239.339 117.388 239.172 116.598 239.172 115.693C239.172 114.799 239.339 114.011 239.672 113.33C240.009 112.648 240.479 112.116 241.081 111.733C241.687 111.35 242.395 111.159 243.206 111.159C243.698 111.159 244.176 111.241 244.638 111.403C245.1 111.566 245.515 111.822 245.882 112.17C246.25 112.519 246.539 112.972 246.751 113.528C246.964 114.081 247.07 114.754 247.07 115.545V116.148H240.132V114.875H245.405C245.405 114.428 245.314 114.032 245.132 113.688C244.95 113.339 244.695 113.064 244.365 112.864C244.039 112.663 243.657 112.562 243.217 112.562C242.74 112.562 242.323 112.68 241.967 112.915C241.615 113.146 241.342 113.449 241.149 113.824C240.96 114.195 240.865 114.598 240.865 115.034V116.028C240.865 116.612 240.967 117.108 241.172 117.517C241.38 117.926 241.67 118.239 242.041 118.455C242.412 118.667 242.846 118.773 243.342 118.773C243.664 118.773 243.958 118.727 244.223 118.636C244.488 118.542 244.717 118.402 244.911 118.216C245.104 118.03 245.251 117.801 245.354 117.528L246.962 117.818C246.833 118.292 246.602 118.706 246.268 119.062C245.939 119.415 245.524 119.689 245.024 119.886C244.528 120.08 243.962 120.176 243.325 120.176ZM252.222 120.17C251.517 120.17 250.888 119.991 250.335 119.631C249.786 119.267 249.354 118.75 249.04 118.08C248.729 117.405 248.574 116.597 248.574 115.653C248.574 114.71 248.731 113.903 249.045 113.233C249.364 112.562 249.799 112.049 250.352 111.693C250.905 111.337 251.532 111.159 252.233 111.159C252.775 111.159 253.21 111.25 253.54 111.432C253.873 111.61 254.131 111.818 254.312 112.057C254.498 112.295 254.642 112.506 254.744 112.688H254.847V108.364H256.545V120H254.886V118.642H254.744C254.642 118.828 254.494 119.04 254.301 119.278C254.112 119.517 253.85 119.725 253.517 119.903C253.184 120.081 252.752 120.17 252.222 120.17ZM252.597 118.722C253.085 118.722 253.498 118.593 253.835 118.335C254.176 118.074 254.434 117.712 254.608 117.25C254.786 116.788 254.875 116.25 254.875 115.636C254.875 115.03 254.788 114.5 254.614 114.045C254.439 113.591 254.184 113.237 253.847 112.983C253.509 112.729 253.093 112.602 252.597 112.602C252.085 112.602 251.659 112.735 251.318 113C250.977 113.265 250.72 113.627 250.545 114.085C250.375 114.544 250.29 115.061 250.29 115.636C250.29 116.22 250.377 116.744 250.551 117.21C250.725 117.676 250.983 118.045 251.324 118.318C251.669 118.587 252.093 118.722 252.597 118.722Z" fill="#B8B8B8"/>
+                    </svg>                        
+                </ul>
+            </div>
+        </div>
+                  
+        <!-- bottom -->
+        <div class="app-chartSidebar-bottom app-h-auto">
+            <!-- add new answer -->
+            <div class="app-chartSidebar-addSection app-m-0 app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs">
+                <!-- heading -->
+                <div class="app-chartSidebar-add-heading app-w-100 app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                    <label *ngIf='selected.componentType === "Question"' class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Add New Answer</label>
+                    <label *ngIf='selected.componentType === "Product"' class="app-p-0 app-m-0 font-16 font-inter font-medium colour-darkBlue">Add New Product</label>
+                    <!-- this is only if there is a file upload, to show max limit -->
+                    <!-- <label class="app-p-0 app-m-0 font-12 font-inter font-medium colour-darkGrey">*max size is 10 mb</label> -->
+                </div>
+                <!-- body -->
+                <div *ngIf='selected.componentType === "Question"' class="app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                    <!-- replace app-field with app-chartSidebar-add-rangeField for ranges and upoad images -->
+
+                    <!-- text answer -->
+                    <div  *ngIf='selected.questionType === "Select Text"' class="app-chartSidebar-add-field app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                        <input [(ngModel)]="childSelectText" class="app-input app-m-0 app-p-0 app-w-100" type="text" placeholder="Enter Your Question">
+                    </div>
+
+                    <!-- user input name/email/phone number/text -->
+                    <div  *ngIf='selected.questionType === "User Input"' (click)="onClickUserInput($event)" class="app-chartSidebar-add-field app-cursor-pointer app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">                        
+                        <label class="app-cursor-pointer app-m-0 app-p-0 font-16 font-regular colour-darkGrey font-inter">
+                            {{selected.userInput}}
+                        </label>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -4 16 16" width="16" class="fill-darkGrey">
+                            <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
+                        </svg>
+                        <ul *ngIf="userInputMenuFlag" class="app-dropdown-menu app-p-0 app-m-0">
+                            <div *ngFor="let uInput of userInputs">
+                                <li *ngIf="uInput !== selected.userInput" (click)="onSelectUserInput(uInput)" class="app-dropdown-menu-items app-cursor-pointer font-14 font-regular colour-darkGrey font-inter">{{uInput}}</li>
+                            </div>
+                        </ul>
+                    </div>
+
+                    <!-- range and select images -->
+                    <div *ngIf='selected.questionType === "Range Slider" || selected.questionType === "Select Image"' class="app-chartSidebar-add-field app-chartSidebar-add-rangeField app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                        <!-- range -->
+                        <label *ngIf='selected.questionType === "Range Slider"' class="app-chartSidebar-add-range-label app-m-0 app-flex app-flex-row app-flex-align-c app-flex-jus-c font-16 font-regular colour-white font-inter">From</label>                        
+                        <div *ngIf='selected.questionType === "Range Slider" && selected.hasChild' class="app-chartSidebar-add-range-input app-cursor-notAllowed">
+                            <input [(ngModel)]="childRangeFrom" class="app-number-input app-input-disabled app-w-100 app-m-0 app-p-0" type="number">
+                        </div>
+                        <div *ngIf='selected.questionType === "Range Slider" && !selected.hasChild' class="app-chartSidebar-add-range-input">
+                            <input [(ngModel)]="childRangeFrom" class="app-number-input app-w-100 app-m-0 app-p-0" type="number">
+                        </div>
+                        <label *ngIf='selected.questionType === "Range Slider"' class="app-chartSidebar-add-range-label app-m-0 app-flex app-flex-row app-flex-align-c app-flex-jus-c font-16 font-regular colour-white font-inter">To</label>                        
+                        <div *ngIf='selected.questionType === "Range Slider"' class="app-chartSidebar-add-range-input">
+                            <input [(ngModel)]="childRangeTo" class="app-number-input app-w-100 app-m-0 app-p-0" type="number">
+                        </div>
+
+                        <!-- select images -->
+                        <label *ngIf='selected.questionType === "Select Image" && childSelectImageName === ""' class="app-chartSidebar-add-uploadLabel app-m-0 font-16 font-regular colour-darkGrey font-inter">Choose File</label>
+                        <label *ngIf='selected.questionType === "Select Image" && childSelectImageName !== ""' class="app-chartSidebar-add-uploadLabel app-m-0 font-16 font-regular colour-darkGrey font-inter">{{childSelectImageName}}</label>
+                        <label *ngIf='selected.questionType === "Select Image"' for="addAnswerImage" class="app-chartSidebar-add-uploadButton app-m-0 app-cursor-pointer app-w-auto font-16 font-regular colour-white font-inter">Upload</label>
+                        <input (change)="childSelectImageUpload($event)" (click)="this.value = null" *ngIf='selected.questionType === "Select Image"' class="app-chartSidebar-answer-image-file" type="file" id="addAnswerImage">
+
+                    </div>
+
+                    <button *ngIf="addChildButton && !(selected.hasChild && selected.questionType === 'User Input')" (click)="addChild(selected)" class="app-chartSidebar-add-button app-p-0 app-m-0 app-flex app-flex-row app-flex-jus-c app-flex-align-c">
+                        <div class="app-chartSidebar-add-button-still app-p-0 app-m-0 app-flex app-flex-row app-flex-jus-c app-flex-align-c">
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24" class="fill-white app-chartSidebar-add-button-svg">
+                            <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
+                        </svg>
+                    </button>                    
+                    <button *ngIf="!addChildButton && !(selected.hasChild && selected.questionType === 'User Input')" (click)="addChild(selected)" class="app-chartSidebar-add-button app-cursor-pointer app-p-0 app-m-0 app-flex app-flex-row app-flex-jus-c app-flex-align-c">
+                        <div class="app-chartSidebar-add-button-loading app-p-0 app-m-0 app-flex app-flex-row app-flex-jus-c app-flex-align-c">
+                        </div>
+                    </button>
+                    <button *ngIf="selected.hasChild && selected.questionType === 'User Input'" (click)="prompt('error', 'User input can only have one answer')" class="app-chartSidebar-add-button-disabled bg-color-darkGrey app-cursor-pointer app-p-0 app-m-0 app-flex app-flex-row app-flex-jus-c app-flex-align-c">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24" class="fill-white">
+                            <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
+                        </svg>
+                    </button>
+
+
+                </div>
+
+                <div *ngIf='selected.componentType === "Product"' class="app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-col app-flex-jus-bw app-flex-align-c">
+                    <div *ngFor="let field of productFields" class="app-chartSidebar-addProduct-field app-w-100 app-h-auto app-flex app-flex-col app-flex-align-l app-flex-jus-fs">
+                        <div class="app-chartSidebar-addProduct-field-heading app-w-100 app-h-auto app-flex app-flex-row app-flex-align-c app-flex-jus-bw">
+                            <label class="app-capitalize app-p-0 app-m-0 font-14 font-inter font-medium colour-darkBlue">{{field}}</label>
+                        </div>
+                        <div *ngIf='field !== "image"' class="app-field app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                            <input [(ngModel)]="product[field]" class="app-input app-m-0 app-p-0 app-w-100" type="text" placeholder="Enter {{field}}">
+                        </div>
+                        <div *ngIf='field === "image"' class="app-chartSidebar-add-rangeField app-p-0 app-m-0 app-w-100 app-h-auto app-flex app-flex-row app-flex-jus-bw app-flex-align-c">
+                            <label *ngIf='product.imageName === ""' class="app-chartSidebar-add-uploadLabel app-m-0 font-16 font-regular colour-darkGrey font-inter">Choose File</label>
+                            <label *ngIf='product.imageName !== ""' class="app-chartSidebar-add-uploadLabel app-m-0 font-16 font-regular colour-darkGrey font-inter">{{product.imageName}}</label>
+                            <label for="addProductImage" class="app-chartSidebar-add-uploadButton app-m-0 app-cursor-pointer app-w-auto font-16 font-regular colour-white font-inter">Upload</label>
+                            <input (change)="childProductImageUpload($event)" (click)="this.value = null" class="app-chartSidebar-answer-image-file" type="file" id="addProductImage">
+                        </div>
+                    </div>
+                </div>
+
+                <button *ngIf='selected.componentType === "Product"' (click)="addProduct(selected._id.toString(), selected.rootId, product)" class="app-chartSidebar-addProduct-button app-m-0 app-flex app-flex-row app-flex-align-c app-flex-jus-c app-h-auto app-w-100 app-cursor-pointer font-16 font-inter font-medium colour-white">
+                    Add Product
+                </button>
+
+                
+
+                <!-- message -->
+                <label *ngIf="msgFlag && msgSuccess" class="app-chartSidebar-add-msg app-m-0 font-12 font-inter font-medium colour-success">{{msg}}</label>
+                <label *ngIf="msgFlag && !msgSuccess" class="app-chartSidebar-add-msg app-m-0 font-12 font-inter font-medium colour-error">{{msg}}</label>
+
+
+
+            </div>
+
+            <button (click)="deleteNode(selected, 'self')" class="app-chartSidebar-add-delete app-cursor-pointer app-flex app-flex-row app-flex-align-c app-flex-jus-c">
+                <label class="font-16 font-inter font-medium app-m-0 app-cursor-pointer colour-error">Delete Component</label>
+                <label class="app-chartSidebar-add-delete-icon app-m-0 app-cursor-pointer app-flex app-flex-row app-flex-align-c app-flex-jus-c">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="20" class="fill-error">
+                        <path d="M12 2h5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1zm3.8 6l-.613 9.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.205 8H15.8zM7 9a1 1 0 0 0-1 1v7a1 1 0 0 0 2 0v-7a1 1 0 0 0-1-1zm4 0a1 1 0 0 0-1 1v7a1 1 0 0 0 2 0v-7a1 1 0 0 0-1-1z"></path>            
+                    </svg>
+                </label>
+            </button>
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- <div *ngIf="shouldRender" class="details-modal">
+    <div class="details-modal-cont">
+        <h2>Details #{{selected._id}}</h2>
+        <form>
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" name="name" matInput [(ngModel)]="selected.name"
+                (change)="onChange()">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <textarea name="description" matInput [(ngModel)]="selected.description"
+                (change)="onChange()"></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Level</mat-label>
+                <input type="text" name="level" disabled matInput [(ngModel)]="selected.level">
+            </mat-form-field>
+        </form>
+        <div class="details-modal-close" (click)="onClose()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div *ngIf="flagEdit" class="details-modal">
+    <div class="details-modal-cont">    
+            <div *ngIf="!this.isRoot()">
+                <div class="slider" *ngIf="parent.selectQuestionType === 'Slider'">
+                    <label for="basic-url" class="form-label">Enter range for this answer:</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text componentType-input">From</span>
+                        <div type="number" class="form-control componentType-input disabled" aria-label="From">{{ selected.sliderFrom }}</div>
+                        <span class="input-group-text componentType-input">To</span>
+                        <div *ngIf="!tempFocus" type="number" class="form-control componentType-input disabled" aria-label="From">{{ selected.sliderTo }}</div>
+                        <input *ngIf="tempFocus" type="number" class="form-control componentType-input" (keyup)="onRangeChange()" min="{{ selected.sliderFrom }}" matInput [(ngModel)]="selected.sliderTo" aria-label="To">
+                    </div>
+                    <p class="err-msg" *ngIf="!validRange">Please enter a correct range</p>
+                </div>
+            </div>
+            
+            <div *ngIf="!this.isRoot()">
+                <div class="select" *ngIf="parent.selectQuestionType === 'Select'">
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>{{ selected.selectAnswerType }}</button>
+                        <div ngbDropdownMenu >
+                            <button ngbDropdownItem (click)="onSelectAnswerTypeChange('Text')">Text</button>
+                            <button ngbDropdownItem (click)="onSelectAnswerTypeChange('Image')">Image</button>
+                        </div>                    
+                    </div>
+                    <input type="text" matInput (change)="update()" [(ngModel)]="selected.selectAnswerTypeText" *ngIf='selected.selectAnswerType == "Text"' class="componentType-input form-control" style="height: 38.19px !important;">
+                    <input type="file" matInput (change)="onOptionFileChange($event)" *ngIf='selected.selectAnswerType == "Image"' class="componentType-input form-control" style="height: 38.19px !important;">                
+                </div>
+                <label *ngIf='selected.selectAnswerType == "Image"' class="form-label">Uplaoded File: {{ optionImageName }}</label>
+                <p class="err-msg" *ngIf="uploadOptionErr && uplaodOptionlog">{{ uploadOptionErrMsg }}</p>
+                <p class="suc-msg" *ngIf="!uploadOptionErr && uplaodOptionlog">Uplaoded sucessfully!</p>
+            </div>
+  
+            <div *ngIf="!this.isRoot()">
+                <div *ngIf="parent.selectQuestionType !== 'Text'">
+                    <hr class="divider">
+                </div>
+            </div>
+
+            <div class="componentType">
+                <label class="form-label">Select next component</label>
+                <div ngbDropdown>
+                    <button class="btn btn-outline-primary" (click)="onComponentTypeClick()" ngbDropdownToggle>{{ selected.componentType }}</button>
+                    <div ngbDropdownMenu *ngIf='allow'>
+                        <button ngbDropdownItem (click)="onComponentTypeChange('Question')">Question</button>
+                        <button ngbDropdownItem (click)="onComponentTypeChange('Product')">Product</button>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="product" *ngIf='selected.componentType == "Product"'>
+                <label class="form-label">Product Title</label>
+                <input type="text" matInput (change)="update()" [(ngModel)]="selected.productTitle" class="componentType-input form-control" style="height: 38.19px !important;">
+
+                <label class="form-label pd20">Product Description</label>
+                <textarea matInput (change)="update()" [(ngModel)]="selected.productDescription" class="form-control" style="padding-top: 0px !important;" placeholder="Enter description of your product"></textarea>
+            
+                <label class="form-label pd20">Product Url</label>
+                <input type="text" (change)="update()" [(ngModel)]="selected.productUrl" matInput class="componentType-input form-control" style="height: 38.19px !important;">
+
+                <label class="form-label pd20">Upload image</label>
+                <input type="file" matInput (change)="onProductFileChange($event)" class="componentType-input form-control" style="height: 38.19px !important;">
+                <label class="form-label">Uplaoded File: {{ productImageName }} </label>
+                <p class="err-msg" *ngIf="uploadProductErr && uplaodProductlog">{{ uploadProductErrMsg }}</p>
+                <p class="suc-msg" *ngIf="!uploadProductErr && uplaodProductlog">Uplaoded sucessfully!</p>
+            </div>
+
+            <div class="question" *ngIf='selected.componentType == "Question"'>                
+                <div ngbDropdown>
+                    <button class="btn btn-outline-primary" ngbDropdownToggle>{{ selected.selectQuestionType }}</button>
+                    <div ngbDropdownMenu>
+                        <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Text')">Text</button>
+                        <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Select')">Select</button>
+                        <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Slider')">Slider</button>
+                    </div>                    
+                </div>
+                <input type="text" (change)="update()" [(ngModel)]="selected.question" matInput class="componentType-input form-control" placeholder="Enter your question" style="height: 38.19px !important;">
+            </div>
+        <div class="details-modal-close" (click)="onClose()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div *ngIf="flagLink" class="details-modal">
+    <div class="details-modal-cont">
+        <div class="link-modal">
+            <p class="link-modal-text">Paste this code in your application: <br><br>{{ link }} </p>
+            <button class="link-modal-button" ngxClipboard [cbContent]="link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 24 24" width="24" fill="currentColor"><path d="M3.19 9.345a.97.97 0 0 1 1.37 0 .966.966 0 0 1 0 1.367l-2.055 2.052a1.932 1.932 0 0 0 0 2.735 1.94 1.94 0 0 0 2.74 0l4.794-4.787a.966.966 0 0 0 0-1.367.966.966 0 0 1 0-1.368.97.97 0 0 1 1.37 0 2.898 2.898 0 0 1 0 4.103l-4.795 4.787a3.879 3.879 0 0 1-5.48 0 3.864 3.864 0 0 1 0-5.47L3.19 9.344zm11.62-.69a.97.97 0 0 1-1.37 0 .966.966 0 0 1 0-1.367l2.055-2.052a1.932 1.932 0 0 0 0-2.735 1.94 1.94 0 0 0-2.74 0L7.962 7.288a.966.966 0 0 0 0 1.367.966.966 0 0 1 0 1.368.97.97 0 0 1-1.37 0 2.898 2.898 0 0 1 0-4.103l4.795-4.787a3.879 3.879 0 0 1 5.48 0 3.864 3.864 0 0 1 0 5.47L14.81 8.656z"></path></svg>
+            </button>
+        </div>
+        <div class="details-modal-close" (click)="onLinkClose()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div class="action">
+    <button mat-mini-fab color="accent" (click)="onLinkOpen()" [disabled]="linkValid" class="action-button"  aria-label="add">
+        link
+    </button>
+    <button mat-mini-fab (click)="onAdd()" [disabled]="addBtn" color="accent" class="action-button"  aria-label="add">
+        add
+    </button>
+    <button mat-mini-fab (click)="onDelete(selected)" color="accent" class="action-button"  aria-label="delete">
+        delete
+    </button>
+</div> -->

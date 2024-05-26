@@ -1,0 +1,54 @@
+<div class="container">
+   <div class="left">
+      <div class="leftinner">
+         <h1 class="typeformfont">ProductPath</h1>
+         <h1 class= ""style="display: inline-block; margin-right:5px">Sign In</h1>
+         <span class="dot"></span>
+         <span class="dot"></span>
+         <span class="dot"></span>
+         <p>log into your account</p>
+         <form #a="ngForm" (ngSubmit)="onSubmitLogin(a)">
+           <label for="email">Email</label>
+           <!-- <input class="inputfields" type="email" name="name" id="email"> -->
+           <input class="inputfields" type="text" name="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" autocomplete="off" spellcheck="false" ngModel required email #email="ngModel" />
+           
+           <label for="password">Password</label>
+           <!-- <input class="inputfields" type="password" name="password" id="password"> -->
+           <input class="inputfields" id="password" type="password" name="p1" autocomplete="off" spellcheck="false" ngModel required #p1="ngModel" />
+
+           <p style="margin-top: 7px;"><a href="" style="text-decoration: none; color: #282829;">forgot password?</a></p>
+
+           <!-- invalid msg -->
+           <p class="" style="color: red;font-weight:500;font-size: 20px;padding: 0.7rem 0;font-size: 1rem;" *ngIf="avail">{{msg}}</p>
+
+           <!-- <label for="confirm">Confirm Password</label>
+           <input class="inputfields" type="password" name="confirm" id="confirm">
+           
+           <div class="accept">
+             <input type="checkbox" id="terms">
+             <label for="terms">I agree to the <a href="#">terms of service</a></label>
+           </div> -->
+            
+           <input class="button" [disabled]="a.invalid" type="submit" value="Sign In">
+         </form>
+         <p>don't have an account? <a href="" [routerLink]="['/signup']" routerLinkActive="router-link-active" >register</a></p>
+         <!-- google -->
+         <div class="or or--x seperator" aria-role="presentation">or</div>
+         <a href="#" class="btn btn-google">
+            <img src="../../../assets/images/icons8-google-48.png" style="width: 30px"/>
+            <div class="googlelabel">Sign In with Google</div>
+         </a>
+         
+      </div>
+   </div>
+   
+   <!-- <div class="right" style="background-color: #f8f8f8;">
+      <div class="cont1" style="width: 100%;">
+         <div class="svg">
+            <h2 class="heading typeformfont">convert your sales into growth!</h2>
+            <img class="svgpic" src="../../../assets/images/BeFunky-collage.jpg" alt="">
+         </div>
+      </div>
+   </div> -->
+   
+</div>

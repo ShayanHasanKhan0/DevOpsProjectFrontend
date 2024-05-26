@@ -1,0 +1,20 @@
+<!-- Start Tabs HTML -->
+<!-- <img src="../../../assets/icons/left-arrow.png" [routerLink]="['/d/quizmenu']" alt="" style="position: absolute; top:17px; left:100px;cursor: pointer;"> -->
+<div class="tabs">
+	<button class="buttons" [class.selected]="selectedpage==1" [routerLink]="['/d/ds/viewstatstab',formid]"><span>Quiz analysis</span></button>
+	<button class="buttons" [class.selected]="selectedpage==2" [routerLink]="['/d/ds/responses',formid]"><span>responses</span></button>
+	<!-- <button class="buttons" [class.selected]="selectedpage==3" [routerLink]="['/d/ds/viewstatstab',formid]"><span>Statistics</span></button>
+	<button class="buttons" [class.selected]="selectedpage==4">link embed</button> -->
+
+	<!-- <div class="twobuttons">
+		<button class="sidebuttons" style="width: 100px;">
+			<a href="http://localhost:4200/quizlink/{{userid}}/{{formid}}" target="_blank" style="text-decoration: none;color: inherit;display: flex; flex-direction: row;justify-content: center;">
+				<div class="">preview</div>
+				<img src="../../../assets//icons/eye.svg" style="width: 18px; margin-left: 5px;" alt="">
+			</a>
+		</button>
+
+		<button class="sidebuttons" style="margin-left: 10px;">publish</button>
+	</div> -->
+</div>
+<!-- End Tabs HTML -->

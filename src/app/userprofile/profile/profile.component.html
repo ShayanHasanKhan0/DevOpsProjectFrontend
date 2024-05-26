@@ -1,0 +1,79 @@
+<!-- 
+ -->
+<div class="loading" *ngIf="loading">
+  <app-loading></app-loading>
+</div>
+
+<div class="background">
+  <div class="header">
+    <div class="heading1">
+        User Profile
+        <!-- <button class="createquizbutton" (click)="addRoot()">
+            <img src="../../../assets/icons/plus1.svg" class="plus" alt="">
+            <span>Create Form</span>
+        </button> -->
+        <div class="chartname">
+          <!-- Chart One -->
+        </div>
+    </div>
+    
+
+    <div class="maincont" *ngIf="!loading">
+
+      <label for="email" class="box1">Email address</label>
+      <input type="text" class="inputfield" matInput (change)="onChange()" disabled [(ngModel)]="userProfile.email">
+    
+      <div class="overall">Change Password</div>
+      <form #a="ngForm" (ngSubmit)="passwordReset(a)">
+
+        <label class="box1">Enter Password</label>
+        <input type="password" class="inputfield" placeholder="" value="" name="p1" value="" ngModel required #p1="ngModel">
+
+        <label class="box1">Re-enter Password</label>
+        <input type="password" class="inputfield" placeholder="" name="p2" value="" ngModel required #p2="ngModel">
+
+        <input class="changebutton" type="submit" [disabled]="a.invalid" id="subbutton" value="Change Password"/>
+
+        <p class="social-text" style="color: #0a192f;font-weight: bold;font-size: 20px;" *ngIf="prompt">{{prompt}}</p>
+        <p class="social-text" style="color: red;font-weight: bold;font-size: 20px;" *ngIf="avail">{{msg}}</p>
+      </form>
+
+
+    <!-- <div class="heading2">
+        <div class="overall">Overall performance</div>
+        <div class="performancerow">
+            <div class="box">
+                <div class="box1">
+                    Starts
+                </div>
+                <div class="box2">12342</div>
+            </div>
+            <div class="box">
+                <div class="box1">
+                    Completion
+                </div>
+                <div class="box2">113432</div>
+            </div>
+            <div class="box">
+                <div class="box1">
+                    Completion %
+                </div>
+                <div class="box2">113432</div>
+            </div>
+            <div class="box">
+                <div class="box1">
+                    Overall Drop-off
+                </div>
+                <div class="box2">113432</div>
+            </div>
+            <div class="box">
+                <div class="box1">
+                    Overall Drop-off %
+                </div>
+                <div class="box2">--</div>
+            </div>
+        </div>
+        <div class="qbyq">Question by Question analysis</div>
+    </div> -->
+  </div>
+</div>

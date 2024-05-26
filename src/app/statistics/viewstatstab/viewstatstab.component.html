@@ -1,0 +1,292 @@
+<app-quiztabs></app-quiztabs>
+<app-statstab></app-statstab>
+
+<div class="loading" *ngIf="isloading">
+    <app-loading></app-loading>
+</div>
+
+<div class="statscont" *ngIf="!isloading">
+    <div class="header" style="background-color: #FAFAFA;">
+        <div class="heading1">
+            Statistics
+            <!-- <button class="createquizbutton" (click)="addRoot()">
+                <img src="../../../assets/icons/plus1.svg" class="plus" alt="">
+                <span>Create Form</span>
+            </button> -->
+            <div class="chartname">Chart One</div>
+        </div>
+        <div class="heading2">
+            <div class="overall">Overall performance</div>
+            <div class="performancerow">
+                <div class="box">
+                    <div class="box1">
+                        Starts
+                    </div>
+                    <div class="box2">12342</div>
+                </div>
+                <div class="box">
+                    <div class="box1">
+                        Completion
+                    </div>
+                    <div class="box2">113432</div>
+                </div>
+                <div class="box">
+                    <div class="box1">
+                        Completion %
+                    </div>
+                    <div class="box2">113432</div>
+                </div>
+                <div class="box">
+                    <div class="box1">
+                        Overall Drop-off
+                    </div>
+                    <div class="box2">113432</div>
+                </div>
+                <div class="box">
+                    <div class="box1">
+                        Overall Drop-off %
+                    </div>
+                    <div class="box2">--</div>
+                </div>
+            </div>
+            <div class="qbyq">Question by Question analysis</div>
+        </div>
+    </div>
+    
+    
+    <!-- chart -->
+    <div *ngIf="render" class="app-chart-cont" style="background-color: #FAFAFA;">
+        <div class="app-chart-cont-center" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp()" (mousemove)="onMouseMove($event)" >
+            <h1>{{root.name}}</h1>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                [attr.width]="WIDTH"
+                [attr.height]="HEIGHT"
+                [attr.viewBox]="viewBox"
+                class="app-chart">
+                <!-- <g *ngFor="let e of chartElementList" (click)="onClick(e.item)" (dblclick)="onDblClick(e.item)"> -->
+                <g *ngFor="let e of chartElementList" (click)="click($event, e.item)">
+                    <path *ngIf="e.connection" [attr.d]="e.connection" 
+                    [style.stroke]="colors[e.category % colors.length]"
+                    class="app-chart-connection"/>
+                    <rect class="app-chart-item"
+                        [class.app-chart-selected]="e.item._id===selected._id"
+                        [style.stroke]="colors[e.category % colors.length]"
+                        [style.fill]="colors[e.category % colors.length]"
+                        [style.fillOpacity]="1 / (e.item.level + 1)"
+                        [attr.x]="e.x - ELEMENT_WIDTH/2"
+                        [attr.y]="e.y - ELEMENT_HEIGHT/2"
+                        [attr.width]="ELEMENT_WIDTH"
+                        [attr.height]="ELEMENT_HEIGHT"
+                        rx="6" ry="6">
+                    </rect>
+                    <rect class="app-chart-item-heading"
+                        [class.app-chart-selected]="e.item._id===selected._id"
+                        [style.fill]="colors[e.category % colors.length]"
+                        [style.fillOpacity]="1 / (e.item.level + 1)"
+                        [attr.x]="e.x - ELEMENT_WIDTH/2"
+                        [attr.y]="e.y - ELEMENT_HEIGHT/2"
+                        [attr.width]="ELEMENT_WIDTH"
+                        [attr.height]="ELEMENT_HEIGHT - 50"
+                        rx="6" ry="6">
+                    </rect>
+                    <!-- <div *ngIf="e.item._id != rootId"> -->
+    
+                        <!-- <div *ngIf='(e.item.selectText ||  e.item.selectText === "" || e.item.selectImageName ||  e.item.selectImageName === "" || e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0)'> -->
+                            <text *ngIf='e.item.selectText ||  e.item.selectText===""' [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                                {{e.item.selectText}}
+                            </text>
+                            <text *ngIf='(!(e.item.selectText ||  e.item.selectText==="") && !(e.item.selectImageName ||  e.item.selectImageName === "") && !(e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0) && (e.item._id != root._id))' [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                                User Input
+                            </text>
+                            <text *ngIf='e.item.selectImageName ||  e.item.selectImageName === ""' [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                                {{e.item.selectImageName}}
+                            </text>
+                            <text *ngIf="e.item.rangeTo ||  e.item.rangeTo === 0 || e.item.rangeFrom ||  e.item.rangeFrom === 0" [attr.x]="e.x" [attr.y]="e.y - 22.5" class="app-chart-item-text">
+                                {{e.item.rangeFrom}} - {{e.item.rangeTo}}
+                            </text>
+                        <!-- </div> -->
+                        <!-- <ng-template #userI>
+                            <text>
+                                User Input
+                            </text>
+                        </ng-template> -->
+                        <text *ngIf='(e.item.question || e.item.question === "") && !(e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                            {{e.item.question}}
+                        </text>
+                        <text *ngIf='(e.item.question || e.item.question === "") && (e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y + 12.5" class="app-chart-item-text">
+                            {{e.item.question}}
+                        </text>
+                        <text *ngIf='(e.item.products || e.item.products === []) && !(e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                            Product
+                        </text>
+                        <text *ngIf='(e.item.products || e.item.products === []) && (e.item._id != root._id)' [attr.x]="e.x" [attr.y]="e.y + 12.5" class="app-chart-item-text">
+                            Product
+                        </text>
+                        <!-- <ng-template #produccc>
+                            <text>
+                                Product
+                            </text>
+                        </ng-template> -->
+                    <!-- </div> -->
+                    <!-- <div *ngIf="e.item._id == rootId">
+                        <text [attr.x]="e.x" [attr.y]="e.y" class="app-chart-item-text">
+                            Question
+                        </text>
+                    </div> -->
+                    <!-- <text *ngIf="e.item.componentType != 'Component Type'" [attr.x]="e.x" [attr.y]="e.y"
+                        class="app-chart-item-text">{{e.item.componentType}}
+                    </text> -->
+                </g>
+            </svg>
+            <!-- <div class="app-chart-toolbox">
+                <button (click)="onZoomIn()" aria-label="ZoomIn">
+                    zoom_in
+                </button>
+                <button (click)="onZoomOut()" aria-label="ZoomOut">
+                    zoom_out
+                </button>
+                <button (click)="onPan()" aria-label="Pan">
+                    pan_tool
+                </button>
+            </div>     -->
+        </div>
+        <div class="app-chartSidebar app-h-100 app-flex app-flex-col app-flex-align-l app-flex-jus-bw">
+            <h1 class="statsSideBarHead">Question Statistics</h1>
+        </div>
+    </div>
+    
+    <!-- <div *ngIf="shouldRender" class="details-modal">
+        <div class="details-modal-cont">
+            <h2>Details #{{selected._id}}</h2>
+            <form>
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input type="text" name="name" matInput [(ngModel)]="selected.name"
+                    (change)="onChange()">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea name="description" matInput [(ngModel)]="selected.description"
+                    (change)="onChange()"></textarea>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Level</mat-label>
+                    <input type="text" name="level" disabled matInput [(ngModel)]="selected.level">
+                </mat-form-field>
+            </form>
+            <div class="details-modal-close" (click)="onClose()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div *ngIf="flagEdit" class="details-modal">
+        <div class="details-modal-cont">    
+                <div *ngIf="!this.isRoot()">
+                    <div class="slider" *ngIf="parent.selectQuestionType === 'Slider'">
+                        <label for="basic-url" class="form-label">Enter range for this answer:</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text componentType-input">From</span>
+                            <div type="number" class="form-control componentType-input disabled" aria-label="From">{{ selected.sliderFrom }}</div>
+                            <span class="input-group-text componentType-input">To</span>
+                            <div *ngIf="!tempFocus" type="number" class="form-control componentType-input disabled" aria-label="From">{{ selected.sliderTo }}</div>
+                            <input *ngIf="tempFocus" type="number" class="form-control componentType-input" (keyup)="onRangeChange()" min="{{ selected.sliderFrom }}" matInput [(ngModel)]="selected.sliderTo" aria-label="To">
+                        </div>
+                        <p class="err-msg" *ngIf="!validRange">Please enter a correct range</p>
+                    </div>
+                </div>
+                
+                <div *ngIf="!this.isRoot()">
+                    <div class="select" *ngIf="parent.selectQuestionType === 'Select'">
+                        <div ngbDropdown>
+                            <button class="btn btn-outline-primary" ngbDropdownToggle>{{ selected.selectAnswerType }}</button>
+                            <div ngbDropdownMenu >
+                                <button ngbDropdownItem (click)="onSelectAnswerTypeChange('Text')">Text</button>
+                                <button ngbDropdownItem (click)="onSelectAnswerTypeChange('Image')">Image</button>
+                            </div>                    
+                        </div>
+                        <input type="text" matInput (change)="update()" [(ngModel)]="selected.selectAnswerTypeText" *ngIf='selected.selectAnswerType == "Text"' class="componentType-input form-control" style="height: 38.19px !important;">
+                        <input type="file" matInput (change)="onOptionFileChange($event)" *ngIf='selected.selectAnswerType == "Image"' class="componentType-input form-control" style="height: 38.19px !important;">                
+                    </div>
+                    <label *ngIf='selected.selectAnswerType == "Image"' class="form-label">Uplaoded File: {{ optionImageName }}</label>
+                    <p class="err-msg" *ngIf="uploadOptionErr && uplaodOptionlog">{{ uploadOptionErrMsg }}</p>
+                    <p class="suc-msg" *ngIf="!uploadOptionErr && uplaodOptionlog">Uplaoded sucessfully!</p>
+                </div>
+      
+                <div *ngIf="!this.isRoot()">
+                    <div *ngIf="parent.selectQuestionType !== 'Text'">
+                        <hr class="divider">
+                    </div>
+                </div>
+    
+                <div class="componentType">
+                    <label class="form-label">Select next component</label>
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" (click)="onComponentTypeClick()" ngbDropdownToggle>{{ selected.componentType }}</button>
+                        <div ngbDropdownMenu *ngIf='allow'>
+                            <button ngbDropdownItem (click)="onComponentTypeChange('Question')">Question</button>
+                            <button ngbDropdownItem (click)="onComponentTypeChange('Product')">Product</button>
+                        </div>                    
+                    </div>
+                </div>
+    
+                <div class="product" *ngIf='selected.componentType == "Product"'>
+                    <label class="form-label">Product Title</label>
+                    <input type="text" matInput (change)="update()" [(ngModel)]="selected.productTitle" class="componentType-input form-control" style="height: 38.19px !important;">
+    
+                    <label class="form-label pd20">Product Description</label>
+                    <textarea matInput (change)="update()" [(ngModel)]="selected.productDescription" class="form-control" style="padding-top: 0px !important;" placeholder="Enter description of your product"></textarea>
+                
+                    <label class="form-label pd20">Product Url</label>
+                    <input type="text" (change)="update()" [(ngModel)]="selected.productUrl" matInput class="componentType-input form-control" style="height: 38.19px !important;">
+    
+                    <label class="form-label pd20">Upload image</label>
+                    <input type="file" matInput (change)="onProductFileChange($event)" class="componentType-input form-control" style="height: 38.19px !important;">
+                    <label class="form-label">Uplaoded File: {{ productImageName }} </label>
+                    <p class="err-msg" *ngIf="uploadProductErr && uplaodProductlog">{{ uploadProductErrMsg }}</p>
+                    <p class="suc-msg" *ngIf="!uploadProductErr && uplaodProductlog">Uplaoded sucessfully!</p>
+                </div>
+    
+                <div class="question" *ngIf='selected.componentType == "Question"'>                
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary" ngbDropdownToggle>{{ selected.selectQuestionType }}</button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Text')">Text</button>
+                            <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Select')">Select</button>
+                            <button ngbDropdownItem (click)="onSelectQuestionTypeChange('Slider')">Slider</button>
+                        </div>                    
+                    </div>
+                    <input type="text" (change)="update()" [(ngModel)]="selected.question" matInput class="componentType-input form-control" placeholder="Enter your question" style="height: 38.19px !important;">
+                </div>
+            <div class="details-modal-close" (click)="onClose()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div *ngIf="flagLink" class="details-modal">
+        <div class="details-modal-cont">
+            <div class="link-modal">
+                <p class="link-modal-text">Paste this code in your application: <br><br>{{ link }} </p>
+                <button class="link-modal-button" ngxClipboard [cbContent]="link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 24 24" width="24" fill="currentColor"><path d="M3.19 9.345a.97.97 0 0 1 1.37 0 .966.966 0 0 1 0 1.367l-2.055 2.052a1.932 1.932 0 0 0 0 2.735 1.94 1.94 0 0 0 2.74 0l4.794-4.787a.966.966 0 0 0 0-1.367.966.966 0 0 1 0-1.368.97.97 0 0 1 1.37 0 2.898 2.898 0 0 1 0 4.103l-4.795 4.787a3.879 3.879 0 0 1-5.48 0 3.864 3.864 0 0 1 0-5.47L3.19 9.344zm11.62-.69a.97.97 0 0 1-1.37 0 .966.966 0 0 1 0-1.367l2.055-2.052a1.932 1.932 0 0 0 0-2.735 1.94 1.94 0 0 0-2.74 0L7.962 7.288a.966.966 0 0 0 0 1.367.966.966 0 0 1 0 1.368.97.97 0 0 1-1.37 0 2.898 2.898 0 0 1 0-4.103l4.795-4.787a3.879 3.879 0 0 1 5.48 0 3.864 3.864 0 0 1 0 5.47L14.81 8.656z"></path></svg>
+                </button>
+            </div>
+            <div class="details-modal-close" (click)="onLinkClose()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" width="24" fill="currentColor"><path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path></svg>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div class="action">
+        <button mat-mini-fab color="accent" (click)="onLinkOpen()" [disabled]="linkValid" class="action-button"  aria-label="add">
+            link
+        </button>
+        <button mat-mini-fab (click)="onAdd()" [disabled]="addBtn" color="accent" class="action-button"  aria-label="add">
+            add
+        </button>
+        <button mat-mini-fab (click)="onDelete(selected)" color="accent" class="action-button"  aria-label="delete">
+            delete
+        </button>
+    </div> -->
+</div>

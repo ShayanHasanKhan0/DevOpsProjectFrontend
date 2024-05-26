@@ -1,0 +1,149 @@
+<!-- <div class="packages" *ngIf="!loading">
+    <button type="button" class="subscribebuttons" [routerLink]="['/d/dp/checkout/silver']">silver</button>
+    <button type="button" class="subscribebuttons" [routerLink]="['/d/dp/checkout/gold']">gold</button>
+<button type="button" class="subscribebuttons" [routerLink]="['/d/dp/checkout/platinum']">platinum</button>    
+</div> -->
+
+<div class="loading" *ngIf="loading">
+    <app-loading></app-loading>
+</div>
+
+<!-- price plans
+ -->
+<div class="main">
+    <div class="heading">
+        <h1 class="pricing">Pricing.</h1>
+        <p class="para">Recommendation quizzes for individuals and teams of all sizes.</p>
+
+        <div class="toggleplancont">
+            <div class="toggleplan">
+                <div class="" style="margin-right: 5px;">Monthly</div>
+                <label class="switch">
+                    <!-- input -->
+                    <input type="checkbox" (change)="toggleEditable($event)">
+                    
+                    <span class="slider round"></span>
+                </label>
+                <div class="" style="display: inline-block; margin-left: 3px;">Yearly (save 20-25%)</div>
+            </div>
+        </div>
+
+    </div>
+    <table class="table">
+        <tbody class="tr">
+            <tr class="tr tr1" style="height: 42px;">
+                <td class="td" style="width: 25%; border-right: 1px solid #e1e6ec !important;"></td>
+                <td class="td plan" style="width: 25%; font-size: 17px;">Basic</td>
+                <td class="td plan" style="width: 25%; color: #6127FF; font-size: 17px;">Pro Standard</td>
+                <td class="td plan" style="width: 25%; color: #6127FF; font-size: 17px;">Pro Ultra</td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px;">
+                <td class="td" style="width: 25%; border-right: 1px solid #e1e6ec !important;"></td>
+                <td class="td" style="width: 25%;">
+                    <span class="monthly" *ngIf="!toggle">$9</span>
+                    <span class="monthly" *ngIf="toggle">$5</span>
+                    <span class="font-weight-normal">/month</span>
+                </td>
+                <td class="td" style="width: 25%;">
+                    <span class="monthly" *ngIf="!toggle">$14</span>
+                    <span class="monthly" *ngIf="toggle">$10</span>
+                    <span class="font-weight-normal">/month</span>
+                </td>
+                <td class="td" style="width: 25%; ">
+                    <span class="monthly" *ngIf="!toggle">$24</span>
+                    <span class="monthly" *ngIf="toggle">$20</span>
+                    <span class="font-weight-normal">/month</span>
+                </td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; color: #5d768d !important; line-height: 23px;">
+                <td class="td" style="width: 25%; border-right: 1px solid #e1e6ec !important;"></td>
+                <td class="td plan" style="width: 25%;">For solo creators and their collaborators.</td>
+                <td class="td plan" style="width: 25%;">For small teams or one’s big needs.</td>
+                <td class="td plan" style="width: 25%;">For large teams and big projects.</td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">responses 
+                    <div class="tooltip">
+                        <img src="../../../assets/icons/doubts-button.png" class="tooltip" alt="" style="margin-left: 3px;">
+                        <span class="tooltiptext">Number of responses of people</span>
+                    </div>
+                </td>
+                <td class="td details" style="width: 25%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">1,500 responses/month</td>
+                <td class="td details" style="width: 25%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">10,000 responses/month</td>
+                <td class="td details" style="width: 25%; border-top: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">Unlimited</td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">quizzes</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;">10 new quiz/month</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;">25 new quiz/month</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;">Unlimited</td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">themes</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">full customizability</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">Email Support</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">remove productpath branding</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">Export results in CSV</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important; border-bottom:  1px solid #e1e6ec !important;">Zoom Support</td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/wrong.png" style="margin-top: 7px;" alt=""></td>
+                <td class="td details" style="width: 25%; border-bottom:  1px solid #e1e6ec !important;"><img src="../../../assets/icons/check.png" style="margin-top: 7px;" alt=""></td>
+            </tr>
+
+            <tr class="tr tr1" style="height: 42px; font-size: 15px; line-height: 23px;">
+                <td class="td details" style="width: 25%; border-right: 1px solid #e1e6ec !important;"></td>
+                <td class="td details" style="width: 25%; line-height: 35px;">
+                    <button class="subscribe" [routerLink]="['/d/dp/checkout/silver']">subscribe</button>
+                    <div class="" style="margin-top: 5px;">or</div>
+                    <div class="trail">15-day Free Trial</div>
+                </td>
+                <td class="td details" style="width: 25%; line-height: 35px;">
+                    <button class="subscribe" [routerLink]="['/d/dp/checkout/gold']">subscribe</button>
+                    <div class="" style="margin-top: 5px;">or</div>
+                    <div class="trail">15-day Free Trial</div>
+                </td>
+                <td class="td details" style="width: 25%; line-height: 35px;">
+                    <button class="subscribe" [routerLink]="['/d/dp/checkout/platinum']">subscribe</button>
+                    <div class="" style="margin-top: 5px;">or</div>
+                    <div class="trail">15-day Free Trial</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
