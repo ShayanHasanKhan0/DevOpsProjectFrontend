@@ -1,6 +1,9 @@
 # base image
 FROM node:14 as build
 
+# install Angular CLI globally
+RUN npm install -g @angular/cli
+
 # set working directory
 WORKDIR /usr/src/app
 
@@ -18,6 +21,6 @@ RUN ng build --configuration production
 
 # production environment
 FROM nginx:1.19-alpine
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/angular-app /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
