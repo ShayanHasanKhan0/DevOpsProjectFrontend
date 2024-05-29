@@ -1,26 +1,32 @@
-# base image
-FROM node:20 as build
+# Stage 1: Build Angular application
+FROM node:14 as build
 
-# install Angular CLI globally
+# Install Angular CLI globally
 RUN npm install -g @angular/cli
 
-# set working directory
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# copy package.json and package-lock.json
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# install dependencies
+# Install dependencies
 RUN npm install
 
-# copy project files and folders to the current working directory
+# Copy project files
 COPY . .
 
-# build angular app
-RUN ng build --configuration production
+# Build Angular application
+RUN ng build --configuration=production
 
-# production environment
+# Stage 2: Setup production environment
 FROM nginx:1.19-alpine
-COPY --from=build /usr/src/app/dist/angular-app /usr/share/nginx/html
+
+# Copy built Angular app from build stage
+COPY --from=build /app/dist/angular-app /usr/share/nginx/html
+
+# Expose port 80
 EXPOSE 80
+
+# Command to run nginx
 CMD ["nginx", "-g", "daemon off;"]
