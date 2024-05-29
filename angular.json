@@ -47,7 +47,6 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 },
-                //me
                 {
                   "type": "css",
                   "maximumWarning": "5mb",
