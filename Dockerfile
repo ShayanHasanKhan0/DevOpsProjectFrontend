@@ -1,5 +1,5 @@
 # base image
-FROM node:14 as build
+FROM node:20 as build
 
 # install Angular CLI globally
 RUN npm install -g @angular/cli
