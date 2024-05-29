@@ -1,5 +1,5 @@
 # Stage 1: Build Angular application
-FROM node:14 as build
+FROM node:20 as build
 
 # Install Angular CLI globally
 RUN npm install -g @angular/cli
