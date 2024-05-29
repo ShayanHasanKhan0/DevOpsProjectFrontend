@@ -7,19 +7,19 @@
 /* font */
 @font-face {
   font-family: "typeformsegoe";
-  src: url("../../frontend/src/assets/fonts/sogoe/Segoe_UI.ttf")
+  src: url("/assets/fonts/sogoe/Segoe_UI.ttf")
 }
 @font-face {
   font-family: "typeformapercumedium";
-  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuProMedium.otf")
+  src: url("/assets/fonts/Apercu-Font-Family/ApercuProMedium.otf")
 }
 @font-face {
   font-family: "typeformsegoebold";
-  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuBold.otf")
+  src: url("/assets/fonts/Apercu-Font-Family/ApercuBold.otf")
 }
 @font-face {
   font-family: "apercupro";
-  src: url("../../frontend/src/assets/fonts/Apercu-Font-Family/ApercuLight.otf")
+  src: url("/assets/fonts/Apercu-Font-Family/ApercuLight.otf")
 }
 /*  */
 
